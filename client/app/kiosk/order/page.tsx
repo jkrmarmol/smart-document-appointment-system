@@ -8,6 +8,7 @@ import { cleanUpOrder } from '@/store/kiosk/orderSlice';
 import { MenuItem } from '@/types';
 import DocumentItem from '@/components/kiosk/order/document-item';
 import SelectedItem from '@/components/kiosk/order/selected-item';
+import OrderConfirmation from '@/components/kiosk/dialog/order-confirmation';
 
 const menuItems: MenuItem[] = [
   { id: '1', name: 'Summary of Grades', price: 10 },
@@ -48,6 +49,7 @@ export default function Component() {
 
   return (
     <div className="flex h-screen bg-gray-100">
+      <OrderConfirmation />
       <div className="flex-1 overflow-auto p-8">
         <div className="mb-6">
           <Image
