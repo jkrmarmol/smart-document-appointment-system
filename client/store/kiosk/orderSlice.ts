@@ -2,7 +2,8 @@ import { MenuItem, OrderSliceInitialState } from '@/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 let initialState: OrderSliceInitialState = {
-  order: []
+  order: [],
+  openModalConfirmationOrder: false
 };
 
 const orderSlice = createSlice({
@@ -10,7 +11,12 @@ const orderSlice = createSlice({
   initialState,
   reducers: {
     addToOrder: (state, action: PayloadAction<MenuItem>) => {
-      state.order.push(action.payload);
+      const itemExists = state.order.some(
+        (item) => item.id === action.payload.id
+      );
+      if (!itemExists) {
+        state.order.push(action.payload);
+      }
     },
     removeFromOrder: (state, action: PayloadAction<string>) => {
       const itemIndex = state.order.findIndex(
@@ -22,10 +28,18 @@ const orderSlice = createSlice({
     },
     cleanUpOrder: (state) => {
       state.order = [];
+    },
+    setOpenModalConfirmationOrder: (state, action: PayloadAction<boolean>) => {
+      state.openModalConfirmationOrder = action.payload;
     }
   },
   extraReducers(builder) {}
 });
 
-export const { addToOrder, removeFromOrder, cleanUpOrder } = orderSlice.actions;
+export const {
+  addToOrder,
+  removeFromOrder,
+  cleanUpOrder,
+  setOpenModalConfirmationOrder
+} = orderSlice.actions;
 export default orderSlice.reducer;

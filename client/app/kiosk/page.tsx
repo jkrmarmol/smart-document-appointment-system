@@ -39,7 +39,7 @@ export default function Page() {
         </header>
 
         <main className="flex h-[90vh] flex-row md:flex-row">
-          <div className="relative top-40  md:mb-0 md:mr-8">
+          <div className="relative top-40  w-[60%]  flex-shrink md:mb-0 md:mr-8">
             <h1
               className={`text-6xl font-bold md:text-6xl ${poppins.className} font-semibold tracking-wide`}
             >
@@ -61,7 +61,7 @@ export default function Page() {
             />
           </div>
 
-          <div className="space-y-6 self-center align-middle">
+          <div className="flex w-[40%] flex-shrink flex-col items-end space-y-6 self-center">
             <button
               className="relative"
               onClick={() =>

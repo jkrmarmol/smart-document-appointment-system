@@ -40,4 +40,5 @@ export interface MenuItem {
 
 export interface OrderSliceInitialState {
   order: MenuItem[];
+  openModalConfirmationOrder: boolean;
 }

@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import Image from 'next/image';
 import { Button } from '@headlessui/react';
 import { Poppins } from 'next/font/google';
@@ -9,6 +10,8 @@ import { MenuItem } from '@/types';
 import DocumentItem from '@/components/kiosk/order/document-item';
 import SelectedItem from '@/components/kiosk/order/selected-item';
 import OrderConfirmation from '@/components/kiosk/dialog/order-confirmation';
+import { setOpenModalConfirmationOrder } from '@/store/kiosk/orderSlice';
+import { tr } from 'date-fns/locale';
 
 const menuItems: MenuItem[] = [
   { id: '1', name: 'Summary of Grades', price: 10 },
@@ -23,15 +26,15 @@ const menuItems: MenuItem[] = [
   { id: '10', name: 'Summary of Grades', price: 100 },
   { id: '11', name: 'Summary of Grades', price: 100 },
   { id: '12', name: 'Summary of Grades', price: 100 },
-  { id: '12', name: 'Summary of Grades', price: 100 },
-  { id: '12', name: 'Summary of Grades', price: 100 },
-  { id: '12', name: 'Summary of Grades', price: 100 },
-  { id: '12', name: 'Summary of Grades', price: 100 },
-  { id: '12', name: 'Summary of Grades', price: 100 },
-  { id: '12', name: 'Summary of Grades', price: 100 },
-  { id: '12', name: 'Summary of Grades', price: 100 },
-  { id: '12', name: 'Summary of Grades', price: 100 },
-  { id: '12', name: 'Summary of Grades', price: 100 }
+  { id: '13', name: 'Summary of Grades', price: 100 },
+  { id: '14', name: 'Summary of Grades', price: 100 },
+  { id: '15', name: 'Summary of Grades', price: 100 },
+  { id: '16', name: 'Summary of Grades', price: 100 },
+  { id: '17', name: 'Summary of Grades', price: 100 },
+  { id: '18', name: 'Summary of Grades', price: 100 },
+  { id: '19', name: 'Summary of Grades', price: 100 },
+  { id: '20', name: 'Summary of Grades', price: 100 },
+  { id: '20', name: 'Summary of Grades', price: 100 }
 ];
 
 const poppins = Poppins({
@@ -40,16 +43,23 @@ const poppins = Poppins({
 });
 
 export default function Component() {
+  const [modalConfirmation, setModalConfirmation] = useState<boolean>(false);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const selectUserOrder = useAppSelector(
     (state) => state.kioskOrder.order
   ).toReversed();
+  const selectOpenModalConfirmationOrder = useAppSelector(
+    (state) => state.kioskOrder.openModalConfirmationOrder
+  );
   const totalCost = selectUserOrder.reduce((sum, item) => sum + item.price, 0);
 
   return (
     <div className="flex h-screen bg-gray-100">
-      <OrderConfirmation />
+      <OrderConfirmation
+        open={selectOpenModalConfirmationOrder}
+        onClose={() => dispatch(setOpenModalConfirmationOrder(false))}
+      />
       <div className="flex-1 overflow-auto p-8">
         <div className="mb-6">
           <Image
@@ -66,8 +76,8 @@ export default function Component() {
           Choose Documents
         </h2>
         <div className="grid grid-cols-3 gap-4">
-          {menuItems.map((item) => (
-            <DocumentItem {...item} />
+          {menuItems.map((item, index) => (
+            <DocumentItem key={index} {...item} />
           ))}
         </div>
       </div>
@@ -99,6 +109,7 @@ export default function Component() {
             } rounded-xl p-3 font-semibold ${
               selectUserOrder.length === 0 && 'opacity-50'
             }`}
+            onClick={() => dispatch(setOpenModalConfirmationOrder(true))}
           >
             Confirm
           </Button>
