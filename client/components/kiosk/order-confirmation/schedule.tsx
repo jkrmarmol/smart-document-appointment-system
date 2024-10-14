@@ -1,6 +1,8 @@
 import { X } from 'lucide-react';
 import { Poppins } from 'next/font/google';
-import React from 'react';
+import React, { useState } from 'react';
+import 'react-calendar/dist/Calendar.css';
+import Calendar from 'react-calendar';
 
 const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '900'],
@@ -8,6 +10,22 @@ const poppins = Poppins({
 });
 
 export default function Schedule() {
+  const [value, setValue] = useState<Date | null>(new Date());
+  const disabledDates = [
+    new Date(2023, 9, 10), // October 10, 2023
+    new Date(2023, 9, 15), // October 15, 2023
+    new Date(2023, 9, 20) // October 20, 2023
+  ];
+
+  const isDisabledDate = (date: Date) => {
+    return disabledDates.some(
+      (disabledDate) =>
+        date.getFullYear() === disabledDate.getFullYear() &&
+        date.getMonth() === disabledDate.getMonth() &&
+        date.getDate() === disabledDate.getDate()
+    );
+  };
+  console.log(value);
   return (
     <>
       <div className="mb-12 mt-4">
@@ -17,24 +35,13 @@ export default function Schedule() {
         </p>
       </div>
       <div className="space-y-2">
-        {['Summary of Grades', 'Diploma'].map((item) => (
-          <div
-            key={item}
-            className="relative flex flex-col justify-between rounded-lg bg-blue-50 px-8 py-4"
-          >
-            <button className="absolute -right-2 -top-2 rounded-full bg-red-500 p-0.5">
-              <X className="h-5 w-5" color="#fff" />
-            </button>
-            <span className={`${poppins.className} text-sm font-semibold`}>
-              {item}
-            </span>
-            <span
-              className={`${poppins.className} text-sm font-medium opacity-60`}
-            >
-              P100.00
-            </span>
-          </div>
-        ))}
+        <Calendar
+          onChange={(e) => setValue(e as any)}
+          value={value}
+          tileDisabled={({ date, view }) =>
+            view === 'month' && isDisabledDate(date)
+          }
+        />
       </div>
     </>
   );

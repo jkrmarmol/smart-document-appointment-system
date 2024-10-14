@@ -75,7 +75,7 @@ export default function Component() {
         >
           Choose Documents
         </h2>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-4 ">
           {menuItems.map((item, index) => (
             <DocumentItem key={index} {...item} />
           ))}
