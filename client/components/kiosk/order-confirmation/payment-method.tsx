@@ -1,6 +1,6 @@
-import { X } from 'lucide-react';
+import React, { useState } from 'react';
 import { Poppins } from 'next/font/google';
-import React from 'react';
+import { PhilippinePeso } from 'lucide-react';
 
 const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '900'],
@@ -8,32 +8,48 @@ const poppins = Poppins({
 });
 
 export default function PaymentMethod() {
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+
+  const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedOption(event.target.value);
+  };
   return (
     <>
       <div className="mb-12 mt-4">
-        <h3 className="text-lg font-semibold">Shipping Options</h3>
-        <p className="mb-4 text-xs text-black opacity-60">
-          Please verify your order before you proceed
+        <h3 className="text-lg font-semibold">Payment Methods</h3>
+        <p
+          className={`mb-4 text-sm text-black/30 ${poppins.className} font-medium`}
+        >
+          Please select payment method
         </p>
       </div>
-      <div className="space-y-2">
-        {['Summary of Grades', 'Diploma'].map((item) => (
-          <div
+      <div className="h-[50vh] space-y-2 overflow-y-auto overflow-x-hidden p-5">
+        {['GCash', 'Maya', 'Credit Card', 'BPI'].map((item) => (
+          <label
             key={item}
-            className="relative flex flex-col justify-between rounded-lg bg-blue-50 px-8 py-4"
+            className={`relative flex cursor-pointer flex-row items-center rounded-lg px-10 py-6 ${
+              item === selectedOption
+                ? 'border border-blue-500 bg-blue-100'
+                : 'border border-black/5 bg-white'
+            }`}
           >
-            <button className="absolute -right-2 -top-2 rounded-full bg-red-500 p-0.5">
-              <X className="h-5 w-5" color="#fff" />
-            </button>
-            <span className={`${poppins.className} text-sm font-semibold`}>
-              {item}
-            </span>
-            <span
-              className={`${poppins.className} text-sm font-medium opacity-60`}
-            >
-              P100.00
-            </span>
-          </div>
+            <input
+              type="radio"
+              name="shippingOption"
+              value={item}
+              checked={selectedOption === item}
+              onChange={handleOptionChange}
+              className="hidden"
+            />
+            <PhilippinePeso size={35} className="mr-4 text-blue-500" />
+            <div className="flex flex-col gap-2">
+              <span
+                className={`${poppins.className} text-base font-semibold opacity-80`}
+              >
+                {item}
+              </span>
+            </div>
+          </label>
         ))}
       </div>
     </>

@@ -26,7 +26,9 @@ export default function YourOrder() {
     <>
       <div className="mb-12 mt-4">
         <h3 className="text-lg font-semibold">Your Order</h3>
-        <p className="mb-4 text-xs text-black opacity-60">
+        <p
+          className={`mb-4 text-sm text-black/30 ${poppins.className} font-medium`}
+        >
           Please verify your order before you proceed
         </p>
       </div>

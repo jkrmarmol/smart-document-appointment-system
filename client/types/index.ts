@@ -42,3 +42,7 @@ export interface OrderSliceInitialState {
   order: MenuItem[];
   openModalConfirmationOrder: boolean;
 }
+
+export interface DocumentItemProps extends MenuItem {
+  isSelected: boolean;
+}

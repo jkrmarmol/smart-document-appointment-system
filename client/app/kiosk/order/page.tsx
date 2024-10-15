@@ -11,7 +11,7 @@ import DocumentItem from '@/components/kiosk/order/document-item';
 import SelectedItem from '@/components/kiosk/order/selected-item';
 import OrderConfirmation from '@/components/kiosk/dialog/order-confirmation';
 import { setOpenModalConfirmationOrder } from '@/store/kiosk/orderSlice';
-import { tr } from 'date-fns/locale';
+import Payment from '@/components/kiosk/dialog/payment';
 
 const menuItems: MenuItem[] = [
   { id: '1', name: 'Summary of Grades', price: 10 },
@@ -34,7 +34,7 @@ const menuItems: MenuItem[] = [
   { id: '18', name: 'Summary of Grades', price: 100 },
   { id: '19', name: 'Summary of Grades', price: 100 },
   { id: '20', name: 'Summary of Grades', price: 100 },
-  { id: '20', name: 'Summary of Grades', price: 100 }
+  { id: '21', name: 'Summary of Grades', price: 100 }
 ];
 
 const poppins = Poppins({
@@ -43,7 +43,6 @@ const poppins = Poppins({
 });
 
 export default function Component() {
-  const [modalConfirmation, setModalConfirmation] = useState<boolean>(false);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const selectUserOrder = useAppSelector(
@@ -60,8 +59,9 @@ export default function Component() {
         open={selectOpenModalConfirmationOrder}
         onClose={() => dispatch(setOpenModalConfirmationOrder(false))}
       />
-      <div className="flex-1 overflow-auto p-8">
-        <div className="mb-6">
+      {/* <Payment open onClose={() => {}} /> */}
+      <div className="flex h-full w-2/3 flex-col ">
+        <div className="mb-6 px-8 pt-8">
           <Image
             src="/images/icct-logo.png"
             alt="ICCT Logo"
@@ -69,17 +69,35 @@ export default function Component() {
             width={90}
             height={90}
           />
+          <h2
+            className={`mb-4 text-2xl font-bold text-black ${poppins.className} font-semibold`}
+          >
+            Choose Documents
+          </h2>
         </div>
-        <h2
-          className={`mb-4 text-2xl font-bold text-black ${poppins.className} font-semibold`}
-        >
-          Choose Documents
-        </h2>
-        <div className="grid grid-cols-3 gap-4 ">
-          {menuItems.map((item, index) => (
-            <DocumentItem key={index} {...item} />
-          ))}
+
+        <div className="relative flex-1 overflow-y-auto px-12 py-6">
+          <div className="grid grid-cols-3 gap-4">
+            {menuItems.map((item, index) => (
+              <DocumentItem
+                key={index}
+                {...item}
+                isSelected={selectUserOrder.some(
+                  (items) => item.id === items.id
+                )}
+              />
+            ))}
+          </div>
         </div>
+
+        <footer className=" p-4">
+          <p
+            className={`text-black/40 ${poppins.className} text-start text-xs font-medium`}
+          >
+            2024© Developed & Designed by John Kurt Russelle Marmol. All right
+            reserved.
+          </p>
+        </footer>
       </div>
 
       <div className="relative w-1/3 overflow-y-auto overflow-x-hidden bg-gray-900 p-8 text-white">
@@ -90,7 +108,7 @@ export default function Component() {
           ))}
         </div>
 
-        <div className=" w-full ">
+        <div className=" w-full">
           <div className="mb-4 flex items-center justify-between">
             <span className={`text-xl  ${poppins.className} font-medium`}>
               Total

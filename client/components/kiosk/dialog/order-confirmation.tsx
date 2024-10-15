@@ -14,9 +14,10 @@ import ShippingOptions from '../order-confirmation/shipping-options';
 import Address from '../order-confirmation/address';
 import Schedule from '../order-confirmation/schedule';
 import PaymentMethod from '../order-confirmation/payment-method';
-import Completed from '../order-confirmation/completed';
+import Swal from 'sweetalert2';
+import { useRouter } from 'next/navigation';
+import { cleanUpOrder } from '@/store/kiosk/orderSlice';
 import { useAppDispatch } from '@/hooks/redux';
-import { setOpenModalConfirmationOrder } from '@/store/kiosk/orderSlice';
 
 const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '900'],
@@ -31,6 +32,7 @@ export default function OrderConfirmation(props: {
   open: boolean;
   onClose: () => void;
 }) {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -40,6 +42,77 @@ export default function OrderConfirmation(props: {
 
   const handleBackClick = () => {
     setSelectedIndex((prevIndex) => prevIndex - 1);
+  };
+
+  const onClickConfirm = () => {
+    props.onClose();
+    Swal.fire({
+      title: 'Confirm Payment',
+      text: 'How would you like to proceed?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Pay Now',
+      cancelButtonText: 'Pay Later',
+      customClass: {
+        container: `bg-red-500`,
+        confirmButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-medium`,
+        cancelButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-medium`,
+        title: `${poppins.className}`,
+        validationMessage: `${poppins.className}`
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Handle Pay Now
+        Swal.fire({
+          title: 'Please wait...',
+          text: 'Redirecting to Payment Gateway...',
+          icon: 'info',
+          confirmButtonText: 'OK',
+          customClass: {
+            title: `${poppins.className}`,
+            confirmButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-medium`
+          }
+        }).then((result) => {
+          if (result.isConfirmed) {
+            dispatch(cleanUpOrder());
+            router.push('/kiosk');
+            Swal.fire({
+              title: 'Thank your for using our service!',
+              icon: 'success',
+              customClass: {
+                title: `${poppins.className}`,
+                confirmButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-medium`
+              }
+            });
+          }
+        });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        // Handle Pay Later
+        Swal.fire({
+          title: 'Pay Later',
+          text: 'Payment Link has been sent to your email and is also available in the mobile application. You have 24 hours to complete the payment.',
+          icon: 'info',
+          confirmButtonText: 'OK',
+          customClass: {
+            title: `${poppins.className}`,
+            confirmButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-medium`
+          }
+        }).then((result) => {
+          if (result.isConfirmed) {
+            dispatch(cleanUpOrder());
+            router.push('/kiosk');
+            Swal.fire({
+              title: 'Thank your for using our service!',
+              icon: 'success',
+              customClass: {
+                title: `${poppins.className}`,
+                confirmButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-medium`
+              }
+            });
+          }
+        });
+      }
+    });
   };
 
   const tabs = [
@@ -53,7 +126,10 @@ export default function OrderConfirmation(props: {
   return (
     <Dialog
       open={props.open}
-      onClose={props.onClose}
+      onClose={() => {
+        props.onClose();
+        setSelectedIndex(0);
+      }}
       className="relative z-10 "
     >
       <DialogBackdrop
@@ -120,7 +196,10 @@ export default function OrderConfirmation(props: {
             <div className="mt-4 flex justify-end gap-2">
               <Button
                 className={`inline-flex items-center gap-2 rounded-md bg-gray-100 px-5 py-2 text-sm/6 font-medium text-black shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-200 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white ${poppins.className} font-semibold`}
-                onClick={props.onClose}
+                onClick={() => {
+                  props.onClose();
+                  setSelectedIndex(0);
+                }}
                 type="button"
               >
                 Cancel
@@ -137,6 +216,7 @@ export default function OrderConfirmation(props: {
               {selectedIndex === 4 ? (
                 <Button
                   className={`inline-flex items-center gap-2 rounded-md bg-blue-500 px-5 py-2 text-sm/6 font-medium text-white shadow-inner  focus:outline-none data-[hover]:bg-blue-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white ${poppins.className} font-semibold`}
+                  onClick={onClickConfirm}
                 >
                   Confirm
                 </Button>

@@ -84,7 +84,7 @@ export default function Address() {
           Address
         </h3>
         <p
-          className={`mb-4 text-xs text-black opacity-60 ${poppins.className}`}
+          className={`mb-4 text-sm text-black/30 ${poppins.className} font-medium`}
         >
           Please select your address
         </p>

@@ -1,4 +1,4 @@
-import { Gitlab, Package, X } from 'lucide-react';
+import { Package } from 'lucide-react';
 import { Poppins } from 'next/font/google';
 import React, { useState } from 'react';
 
@@ -18,7 +18,9 @@ export default function ShippingOptions() {
     <>
       <div className="mb-12 mt-4">
         <h3 className="text-lg font-semibold">Shipping Options</h3>
-        <p className="mb-4 text-xs text-black opacity-60">
+        <p
+          className={`mb-4 text-sm text-black/30 ${poppins.className} font-medium`}
+        >
           Please select logistic partner
         </p>
       </div>

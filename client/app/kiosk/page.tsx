@@ -49,7 +49,8 @@ export default function Page() {
             <p
               className={`text-lg text-foreground ${poppins.className} mb-10 mt-3 font-light tracking-wide text-white opacity-75`}
             >
-              Select on the right side document what you wanna do!
+              Please select a document on the right side to proceed with your
+              desired action.
             </p>
             <Image
               src="/images/calendar.png"

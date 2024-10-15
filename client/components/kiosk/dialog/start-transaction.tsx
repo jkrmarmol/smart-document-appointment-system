@@ -43,12 +43,12 @@ export default function StartTransaction(props: {
           >
             <DialogTitle
               as="h3"
-              className={`text-center text-2xl font-medium text-black ${poppins.className} font-semibold`}
+              className={`text-center text-2xl font-medium text-black/75 ${poppins.className} font-semibold `}
             >
               Student Number
             </DialogTitle>
             <p
-              className={`mt-1 text-xs text-black/30 ${poppins.className} mb-4 text-center font-medium`}
+              className={`mt-1 text-sm text-black/30 ${poppins.className} mb-4 text-center font-medium`}
             >
               Please enter your student number before to proceed.
             </p>

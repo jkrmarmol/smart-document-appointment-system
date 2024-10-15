@@ -45,3 +45,10 @@ export function formatBytes(
     sizeType === 'accurate' ? accurateSizes[i] ?? 'Bytest' : sizes[i] ?? 'Bytes'
   }`;
 }
+
+export function formatCurrency(amount: number) {
+  return new Intl.NumberFormat('en-PH', {
+    style: 'currency',
+    currency: 'PHP'
+  }).format(amount);
+}
