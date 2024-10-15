@@ -82,46 +82,49 @@ export default function Component() {
         </div>
       </div>
 
-      <div className="w-1/3 overflow-y-auto bg-gray-900 p-8 text-white">
+      <div className="relative w-1/3 overflow-y-auto overflow-x-hidden bg-gray-900 p-8 text-white">
         <h2 className="mb-4 text-2xl font-bold">My Order</h2>
         <div className="mb-4 space-y-2">
           {selectUserOrder.map((item, index) => (
             <SelectedItem key={index} {...item} />
           ))}
         </div>
-        <div className="mb-4 flex items-center justify-between">
-          <span className={`text-xl  ${poppins.className} font-medium`}>
-            Total
-          </span>
-          <span className={`text-xl  ${poppins.className} font-medium`}>
-            {new Intl.NumberFormat('en-US', {
-              style: 'currency',
-              currency: 'PHP'
-            }).format(totalCost)}
-          </span>
-        </div>
 
-        <div className="flex flex-col gap-3">
-          <Button
-            disabled={selectUserOrder.length === 0}
-            className={`w-full bg-blue-600 text-white hover:bg-blue-700 ${
-              poppins.className
-            } rounded-xl p-3 font-semibold ${
-              selectUserOrder.length === 0 && 'opacity-50'
-            }`}
-            onClick={() => dispatch(setOpenModalConfirmationOrder(true))}
-          >
-            Confirm
-          </Button>
-          <Button
-            onClick={() => {
-              dispatch(cleanUpOrder());
-              return router.push('/kiosk');
-            }}
-            className={`w-full bg-gray-300 text-black hover:bg-gray-500 ${poppins.className} rounded-xl p-3 font-semibold`}
-          >
-            Cancel
-          </Button>
+        <div className=" w-full ">
+          <div className="mb-4 flex items-center justify-between">
+            <span className={`text-xl  ${poppins.className} font-medium`}>
+              Total
+            </span>
+            <span className={`text-xl  ${poppins.className} font-medium`}>
+              {new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'PHP'
+              }).format(totalCost)}
+            </span>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <Button
+              disabled={selectUserOrder.length === 0}
+              className={`w-full bg-blue-600 text-white hover:bg-blue-700 ${
+                poppins.className
+              } rounded-xl p-3 font-semibold ${
+                selectUserOrder.length === 0 && 'opacity-50'
+              }`}
+              onClick={() => dispatch(setOpenModalConfirmationOrder(true))}
+            >
+              Confirm
+            </Button>
+            <Button
+              onClick={() => {
+                dispatch(cleanUpOrder());
+                return router.push('/kiosk');
+              }}
+              className={`w-full bg-gray-300 text-black hover:bg-gray-500 ${poppins.className} rounded-xl p-3 font-semibold`}
+            >
+              Cancel
+            </Button>
+          </div>
         </div>
       </div>
     </div>

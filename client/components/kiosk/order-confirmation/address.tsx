@@ -1,8 +1,7 @@
 'use client';
-import { X } from 'lucide-react';
 import { Poppins } from 'next/font/google';
-import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
-import React from 'react';
+import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
+import { useState, useCallback } from 'react';
 
 const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '900'],
@@ -10,7 +9,7 @@ const poppins = Poppins({
 });
 
 const containerStyle = {
-  width: 'auto',
+  width: '50%',
   height: '400px'
 };
 
@@ -21,35 +20,51 @@ const center = {
 
 export default function Address() {
   const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: 'AIzaSyC3nQSgdqBY1jLrWrEVDaJtJKgzc9xeEVU'
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLEMAPAPIKEY ?? '',
+    version: 'beta'
   });
 
-  const [map, setMap] = React.useState<google.maps.Map | null>(null);
-  const [markerPosition, setMarkerPosition] =
-    React.useState<google.maps.LatLngLiteral | null>(null);
-  const [address, setAddress] = React.useState<string | null>(null);
+  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [marker, setMarker] = useState<google.maps.Marker | null>(null);
+  const [address, setAddress] = useState<string | null>(null);
+  const [position, setPosition] = useState<{ lat: number; lng: number } | null>(
+    null
+  );
 
-  const onLoad = React.useCallback(function callback(map: google.maps.Map) {
+  const onLoad = useCallback(function callback(map: google.maps.Map) {
     const bounds = new window.google.maps.LatLngBounds(center);
     map.fitBounds(bounds);
 
     setMap(map);
   }, []);
 
-  const onUnmount = React.useCallback(function callback(map: google.maps.Map) {
+  const onUnmount = useCallback(function callback(map: google.maps.Map) {
     setMap(null);
   }, []);
 
-  const handleMapClick = async (event: google.maps.MapMouseEvent) => {
+  const handleMapClick = (event: google.maps.MapMouseEvent) => {
     if (event.latLng) {
       const position = {
         lat: event.latLng.lat(),
         lng: event.latLng.lng()
       };
-      setMarkerPosition(position);
+      setPosition(position);
 
-      // Fetch address using Geocoding API
+      if (marker) {
+        marker.setPosition(position);
+      } else {
+        const newMarker = new google.maps.Marker({
+          position,
+          map,
+          title: 'Selected Location',
+          icon: {
+            url: '/images/pin-icon.png',
+            scaledSize: new google.maps.Size(30.21, 46.56)
+          }
+        });
+        setMarker(newMarker);
+      }
+
       const geocoder = new window.google.maps.Geocoder();
       geocoder.geocode({ location: position }, (results, status) => {
         if (status === 'OK' && results && results[0]) {
@@ -60,8 +75,7 @@ export default function Address() {
       });
     }
   };
-
-  console.log({ markerPosition, address });
+  console.log({ marker, map, address, position });
 
   return (
     <>
@@ -72,21 +86,47 @@ export default function Address() {
         <p
           className={`mb-4 text-xs text-black opacity-60 ${poppins.className}`}
         >
-          Please verify your order before you proceed
+          Please select your address
         </p>
       </div>
-      <div className="space-y-2">
+      <div className="flex h-[50vh] items-start gap-5 space-y-2 overflow-y-auto overflow-x-hidden p-5">
         {isLoaded && (
           <GoogleMap
             mapContainerStyle={containerStyle}
             center={center}
-            zoom={1000}
+            zoom={10}
             onLoad={onLoad}
             onUnmount={onUnmount}
             onClick={handleMapClick}
-          >
-            {markerPosition && <Marker position={markerPosition} />}
-          </GoogleMap>
+          />
+        )}
+
+        {address && (
+          <div>
+            <div>
+              <label
+                className={`text-sm font-medium ${poppins.className} mb-2 opacity-85`}
+              >
+                Selected Address
+              </label>
+              <input
+                type="text"
+                className={`w-full rounded-lg p-3 ${poppins.className} bg-black bg-opacity-[3%] text-sm font-medium text-black/70 focus:outline-none`}
+                value={address}
+              />
+            </div>
+            <div className="mt-4">
+              <label
+                className={`text-sm font-medium ${poppins.className} mb-2 opacity-85`}
+              >
+                Additional Address Details
+              </label>
+              <textarea
+                rows={6}
+                className={`w-full rounded-lg p-3 ${poppins.className} bg-black bg-opacity-[3%] text-sm font-medium text-black/70 focus:outline-none`}
+              ></textarea>
+            </div>
+          </div>
         )}
       </div>
     </>

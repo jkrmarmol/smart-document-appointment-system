@@ -19,39 +19,42 @@ export default function ShippingOptions() {
       <div className="mb-12 mt-4">
         <h3 className="text-lg font-semibold">Shipping Options</h3>
         <p className="mb-4 text-xs text-black opacity-60">
-          Please verify your order before you proceed
+          Please select logistic partner
         </p>
       </div>
-      <div className="space-y-2">
-        {['Pick Up', 'LBC Express', 'DHL Express', 'J&T Express'].map(
-          (item) => (
-            <label
-              key={item}
-              className={`relative flex cursor-pointer flex-row items-center rounded-lg px-10 py-6 ${
-                item === selectedOption
-                  ? 'border border-blue-500 bg-blue-100'
-                  : 'border border-black/5 bg-white'
-              }`}
-            >
-              <input
-                type="radio"
-                name="shippingOption"
-                value={item}
-                checked={selectedOption === item}
-                onChange={handleOptionChange}
-                className="hidden"
-              />
-              <Package size={35} className="mr-4 text-blue-500" />
-              <div className="flex flex-col gap-2">
-                <span
-                  className={`${poppins.className} text-base font-semibold opacity-80`}
-                >
-                  {item}
-                </span>
-              </div>
-            </label>
-          )
-        )}
+      <div className="h-[50vh] space-y-2 overflow-y-auto overflow-x-hidden p-5">
+        {[
+          'Pick Up (Main Cainta)',
+          'LBC Express',
+          'DHL Express',
+          'J&T Express'
+        ].map((item) => (
+          <label
+            key={item}
+            className={`relative flex cursor-pointer flex-row items-center rounded-lg px-10 py-6 ${
+              item === selectedOption
+                ? 'border border-blue-500 bg-blue-100'
+                : 'border border-black/5 bg-white'
+            }`}
+          >
+            <input
+              type="radio"
+              name="shippingOption"
+              value={item}
+              checked={selectedOption === item}
+              onChange={handleOptionChange}
+              className="hidden"
+            />
+            <Package size={35} className="mr-4 text-blue-500" />
+            <div className="flex flex-col gap-2">
+              <span
+                className={`${poppins.className} text-base font-semibold opacity-80`}
+              >
+                {item}
+              </span>
+            </div>
+          </label>
+        ))}
       </div>
     </>
   );
