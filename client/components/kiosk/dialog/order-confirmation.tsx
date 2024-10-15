@@ -54,9 +54,9 @@ export default function OrderConfirmation(props: {
       confirmButtonText: 'Pay Now',
       cancelButtonText: 'Pay Later',
       customClass: {
-        container: `bg-red-500`,
-        confirmButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-medium`,
-        cancelButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-medium`,
+        container: `${poppins.className}`,
+        confirmButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-normal`,
+        cancelButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-normal`,
         title: `${poppins.className}`,
         validationMessage: `${poppins.className}`
       }
@@ -69,8 +69,9 @@ export default function OrderConfirmation(props: {
           icon: 'info',
           confirmButtonText: 'OK',
           customClass: {
+            container: `${poppins.className}`,
             title: `${poppins.className}`,
-            confirmButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-medium`
+            confirmButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-normal`
           }
         }).then((result) => {
           if (result.isConfirmed) {
@@ -80,8 +81,9 @@ export default function OrderConfirmation(props: {
               title: 'Thank your for using our service!',
               icon: 'success',
               customClass: {
+                container: `${poppins.className}`,
                 title: `${poppins.className}`,
-                confirmButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-medium`
+                confirmButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-normal`
               }
             });
           }
@@ -94,8 +96,9 @@ export default function OrderConfirmation(props: {
           icon: 'info',
           confirmButtonText: 'OK',
           customClass: {
+            container: `${poppins.className}`,
             title: `${poppins.className}`,
-            confirmButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-medium`
+            confirmButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-normal`
           }
         }).then((result) => {
           if (result.isConfirmed) {
@@ -105,8 +108,9 @@ export default function OrderConfirmation(props: {
               title: 'Thank your for using our service!',
               icon: 'success',
               customClass: {
+                container: `${poppins.className}`,
                 title: `${poppins.className}`,
-                confirmButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-medium`
+                confirmButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-normal`
               }
             });
           }

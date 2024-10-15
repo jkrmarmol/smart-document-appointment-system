@@ -70,7 +70,7 @@ export default function Component() {
             height={90}
           />
           <h2
-            className={`mb-4 text-2xl font-bold text-black ${poppins.className} font-semibold`}
+            className={`my-4 text-2xl font-bold text-black ${poppins.className} font-semibold`}
           >
             Choose Documents
           </h2>

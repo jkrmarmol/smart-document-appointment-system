@@ -41,7 +41,7 @@ export default function Schedule() {
           Please verify your order before you proceed
         </p>
       </div>
-      <div className="space-y-2">
+      <div className="h-[50vh] space-y-2 overflow-y-auto overflow-x-hidden p-5">
         <Calendar
           onChange={(e) => setValue(e as any)}
           value={value}

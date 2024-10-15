@@ -86,7 +86,7 @@ export default function Address() {
         <p
           className={`mb-4 text-sm text-black/30 ${poppins.className} font-medium`}
         >
-          Please select your address
+          Please pin your address
         </p>
       </div>
       <div className="flex h-[50vh] items-start gap-5 space-y-2 overflow-y-auto overflow-x-hidden p-5">
@@ -101,33 +101,31 @@ export default function Address() {
           />
         )}
 
-        {address && (
+        <div>
           <div>
-            <div>
-              <label
-                className={`text-sm font-medium ${poppins.className} mb-2 opacity-85`}
-              >
-                Selected Address
-              </label>
-              <input
-                type="text"
-                className={`w-full rounded-lg p-3 ${poppins.className} bg-black bg-opacity-[3%] text-sm font-medium text-black/70 focus:outline-none`}
-                value={address}
-              />
-            </div>
-            <div className="mt-4">
-              <label
-                className={`text-sm font-medium ${poppins.className} mb-2 opacity-85`}
-              >
-                Additional Address Details
-              </label>
-              <textarea
-                rows={6}
-                className={`w-full rounded-lg p-3 ${poppins.className} bg-black bg-opacity-[3%] text-sm font-medium text-black/70 focus:outline-none`}
-              ></textarea>
-            </div>
+            <label
+              className={`text-sm font-medium ${poppins.className} mb-2 opacity-85`}
+            >
+              Selected Address
+            </label>
+            <input
+              type="text"
+              className={`w-full rounded-lg p-3 ${poppins.className} bg-black bg-opacity-[3%] text-sm font-medium text-black/70 focus:outline-none`}
+              value={address ?? ''}
+            />
           </div>
-        )}
+          <div className="mt-4">
+            <label
+              className={`text-sm font-medium ${poppins.className} mb-2 opacity-85`}
+            >
+              Additional Address Details
+            </label>
+            <textarea
+              rows={6}
+              className={`w-full rounded-lg p-3 ${poppins.className} bg-black bg-opacity-[3%] text-sm font-medium text-black/70 focus:outline-none`}
+            ></textarea>
+          </div>
+        </div>
       </div>
     </>
   );

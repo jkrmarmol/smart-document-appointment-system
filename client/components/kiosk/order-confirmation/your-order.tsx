@@ -32,7 +32,7 @@ export default function YourOrder() {
           Please verify your order before you proceed
         </p>
       </div>
-      <div className="h-[40vh] space-y-2 overflow-y-auto overflow-x-hidden p-5">
+      <div className="h-[50vh] space-y-2 overflow-y-auto overflow-x-hidden p-5">
         {selectUserOder.toReversed().map((item, index) => (
           <div
             key={index}
