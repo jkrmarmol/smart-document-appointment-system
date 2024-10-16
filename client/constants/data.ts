@@ -110,6 +110,22 @@ export type Employee = {
   profile_picture?: string | null; // Profile picture can be a string (URL) or null (if no picture)
 };
 
+export type Document = {
+  id: string;
+  name: string;
+  price: number;
+  dayBeforeRelease: number;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type Payment = {
+  id: string;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export type Product = {
   photo_url: string;
   name: string;
@@ -133,6 +149,24 @@ export const navItems: NavItem[] = [
     href: '/dashboard/employee',
     icon: 'user',
     label: 'employee'
+  },
+  {
+    title: 'Documents',
+    href: '/dashboard/documents',
+    icon: 'product',
+    label: 'documents'
+  },
+  {
+    title: 'Payment Options',
+    href: '/dashboard/payment',
+    icon: 'product',
+    label: 'payment'
+  },
+  {
+    title: 'Delivery Options',
+    href: '/dashboard/delivery',
+    icon: 'post',
+    label: 'delivery'
   },
   {
     title: 'Product',

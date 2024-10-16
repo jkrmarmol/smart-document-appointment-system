@@ -177,6 +177,50 @@ export const fakeUsers = {
       limit,
       users: paginatedUsers
     };
+  },
+
+  async getAllDocuments({ search }: { search?: string }) {
+    let users = [...this.records];
+
+    // Search functionality across multiple fields
+    if (search) {
+      users = matchSorter(users, search, {
+        keys: ['name', 'price', 'dayBeforeRelease']
+      });
+    }
+
+    return users;
+  },
+
+  async getDocument({
+    page = 1,
+    limit = 10,
+    search
+  }: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  }) {
+    const allUsers = await this.getAllDocuments({ search });
+    const totalUsers = allUsers.length;
+
+    // Pagination logic
+    const offset = (page - 1) * limit;
+    const paginatedUsers = allUsers.slice(offset, offset + limit);
+
+    // Mock current time
+    const currentTime = new Date().toISOString();
+
+    // Return paginated response
+    return {
+      success: true,
+      time: currentTime,
+      message: 'Sample data for testing and learning purposes',
+      total_users: totalUsers,
+      offset,
+      limit,
+      users: paginatedUsers
+    };
   }
 };
 
