@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { createDocument } from '@/server/create-payment';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -32,8 +33,9 @@ export default function DocumentsForm() {
     }
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const response = await createDocument(values);
+    console.log(response);
   }
 
   return (
@@ -67,11 +69,28 @@ export default function DocumentsForm() {
                   <FormItem>
                     <FormLabel>Price</FormLabel>
                     <FormControl>
-                      <div className=" flex flex-row items-center">
+                      {/* <div className=" flex flex-row items-center">
                         <p className="mr-2">₱</p>
                         <Input
                           placeholder="Enter document price"
                           type="number"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(e.target.valueAsNumber)
+                          }
+                        />
+                      </div> */}
+                      <div className="relative">
+                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                          <span className="text-muted-foreground">₱</span>
+                        </div>
+                        <Input
+                          id="currency"
+                          type="number"
+                          min={0}
+                          max={10000}
+                          step={0.01}
+                          className="pl-9"
                           {...field}
                           onChange={(e) =>
                             field.onChange(e.target.valueAsNumber)
