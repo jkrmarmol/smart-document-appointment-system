@@ -41,6 +41,18 @@ export interface MenuItem {
 export interface OrderSliceInitialState {
   order: MenuItem[];
   openModalConfirmationOrder: boolean;
+  orderData: {
+    orderItem: MenuItem[];
+    shippingOptions: string;
+    address: {
+      googleMapAddress: string;
+      longitude: number;
+      latitude: number;
+      additionalAddress: string;
+    };
+    schedule: Date;
+    paymentMethod: string;
+  };
 }
 
 export interface DocumentItemProps extends MenuItem {

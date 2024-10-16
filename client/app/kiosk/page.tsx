@@ -5,6 +5,7 @@ import { Poppins } from 'next/font/google';
 import Image from 'next/image';
 import StartTransaction from '@/components/kiosk/dialog/start-transaction';
 import CheckStatus from '@/components/kiosk/dialog/check-status';
+import LiveDate from '@/components/kiosk/live-date';
 
 const poppins = Poppins({
   weight: ['100', '200', '300', '400', '600', '900'],
@@ -33,7 +34,7 @@ export default function Page() {
           />
           <div className="text-sm">
             <span className={`mr-4 ${poppins.className} font-medium`}>
-              {new Date().toDateString()}
+              <LiveDate />
             </span>
           </div>
         </header>

@@ -1,5 +1,4 @@
 'use client';
-import { useState } from 'react';
 import Image from 'next/image';
 import { Button } from '@headlessui/react';
 import { Poppins } from 'next/font/google';
@@ -11,7 +10,6 @@ import DocumentItem from '@/components/kiosk/order/document-item';
 import SelectedItem from '@/components/kiosk/order/selected-item';
 import OrderConfirmation from '@/components/kiosk/dialog/order-confirmation';
 import { setOpenModalConfirmationOrder } from '@/store/kiosk/orderSlice';
-import Payment from '@/components/kiosk/dialog/payment';
 
 const menuItems: MenuItem[] = [
   { id: '1', name: 'Summary of Grades', price: 10 },
@@ -59,7 +57,7 @@ export default function Component() {
         open={selectOpenModalConfirmationOrder}
         onClose={() => dispatch(setOpenModalConfirmationOrder(false))}
       />
-      {/* <Payment open onClose={() => {}} /> */}
+
       <div className="flex h-full w-2/3 flex-col ">
         <div className="mb-6 px-8 pt-8">
           <Image
@@ -122,7 +120,7 @@ export default function Component() {
           </div>
 
           <div className="flex flex-col gap-3">
-            <Button
+            <button
               disabled={selectUserOrder.length === 0}
               className={`w-full bg-blue-600 text-white hover:bg-blue-700 ${
                 poppins.className
@@ -132,8 +130,8 @@ export default function Component() {
               onClick={() => dispatch(setOpenModalConfirmationOrder(true))}
             >
               Confirm
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={() => {
                 dispatch(cleanUpOrder());
                 return router.push('/kiosk');
@@ -141,7 +139,7 @@ export default function Component() {
               className={`w-full bg-gray-300 text-black hover:bg-gray-500 ${poppins.className} rounded-xl p-3 font-semibold`}
             >
               Cancel
-            </Button>
+            </button>
           </div>
         </div>
       </div>
