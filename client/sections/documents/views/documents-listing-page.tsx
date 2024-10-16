@@ -31,8 +31,6 @@ export default async function DocumentsListingPage({}: TDocumentListingPage) {
     ...(gender && { genders: gender })
   };
 
-  console.log(filters);
-
   // mock api call
   const data = {
     total_users: 12,

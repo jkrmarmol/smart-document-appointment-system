@@ -126,6 +126,13 @@ export type Payment = {
   updatedAt: Date;
 };
 
+export type Delivery = {
+  id: string;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export type Product = {
   photo_url: string;
   name: string;

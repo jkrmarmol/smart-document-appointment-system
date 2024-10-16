@@ -3,7 +3,7 @@ import PageContainer from '@/components/layout/page-container';
 import { buttonVariants } from '@/components/ui/button';
 import { Heading } from '@/components/ui/heading';
 import { Separator } from '@/components/ui/separator';
-import { Payment } from '@/constants/data';
+import { Delivery } from '@/constants/data';
 import { searchParamsCache } from '@/lib/searchparams';
 import { cn } from '@/lib/utils';
 import { Plus } from 'lucide-react';
@@ -12,12 +12,12 @@ import PaymentTable from '../payment-tables';
 
 const breadcrumbItems = [
   { title: 'Dashboard', link: '/dashboard' },
-  { title: 'Payment', link: '/dashboard/payment' }
+  { title: 'Delivery', link: '/dashboard/delivery' }
 ];
 
 type TDocumentListingPage = {};
 
-export default async function PaymentListingPage({}: TDocumentListingPage) {
+export default async function DeliveryListingPage({}: TDocumentListingPage) {
   // Showcasing the use of search params cache in nested RSCs
   const page = searchParamsCache.get('page');
   const search = searchParamsCache.get('q');
@@ -53,7 +53,7 @@ export default async function PaymentListingPage({}: TDocumentListingPage) {
     return true;
   });
   const totalData = data.users.length;
-  const payment: Payment[] = filteredDocuments;
+  const delivery: Delivery[] = filteredDocuments;
 
   return (
     <PageContainer scrollable>
@@ -62,19 +62,19 @@ export default async function PaymentListingPage({}: TDocumentListingPage) {
 
         <div className="flex items-start justify-between">
           <Heading
-            title={`Payment (${totalData})`}
-            description="Manage documents (Server side table functionalities.)"
+            title={`Delivery Options (${totalData})`}
+            description="Manage delivery options (Server side table functionalities.)"
           />
 
           <Link
-            href={'/dashboard/payment/new'}
+            href={'/dashboard/delivery/new'}
             className={cn(buttonVariants({ variant: 'default' }))}
           >
             <Plus className="mr-2 h-4 w-4" /> Add New
           </Link>
         </div>
         <Separator />
-        <PaymentTable data={payment} totalData={totalData} />
+        <PaymentTable data={delivery} totalData={totalData} />
       </div>
     </PageContainer>
   );
