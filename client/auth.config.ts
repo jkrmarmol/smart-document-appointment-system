@@ -1,9 +1,9 @@
-// import { PrismaClient } from '@prisma/client';
 import { NextAuthConfig } from 'next-auth';
 import CredentialProvider from 'next-auth/providers/credentials';
 import { compare } from 'bcryptjs';
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import { prisma } from '@/server/prisma';
 
-// const prisma = new PrismaClient();
 const authConfig = {
   secret: process.env.NEXTAUTH_SECRET,
   session: {
@@ -29,29 +29,29 @@ const authConfig = {
           type: 'password'
         }
       },
-      authorize(credentials, req) {
-        if (credentials.email === 'test@mail.com' && credentials.password === '@Test123') {
-          return { email: credentials.email, id: 'asdf' };
+      async authorize(credentials, req) {
+        const userData = await prisma.users.findFirst({
+          where: {
+            email: credentials.email ?? ''
+          }
+        });
+        console.log(userData);
+        if (!userData) return null;
+
+        const checkPasswordCorrect = await compare(credentials.password as string, userData.password);
+
+        if (checkPasswordCorrect) {
+          return {
+            id: userData.id,
+            email: userData.email
+          };
+        } else {
+          return null;
         }
-        return null;
-        // const userData = await prisma.users.findFirst({
-        //   where: {
-        //     email: credentials.email ?? ''
-        //   }
-        // });
-        // console.log(userData);
-        // if (!userData) return null;
-
-        // const checkPasswordCorrect = await compare(credentials.password as string, userData.password);
-
-        // if (checkPasswordCorrect) {
-        //   return userData;
-        // } else {
-        //   return null;
-        // }
       }
     })
   ],
+  adapter: PrismaAdapter(prisma),
   pages: {
     signIn: '/',
     error: '/'

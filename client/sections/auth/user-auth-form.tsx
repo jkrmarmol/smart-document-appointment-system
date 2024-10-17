@@ -43,6 +43,7 @@ export default function UserAuthForm() {
         redirect: false,
         callbackUrl: callbackUrl ?? '/dashboard'
       });
+      console.log(response);
       if (response?.code) {
         setIsLoading(false);
         return toast({
