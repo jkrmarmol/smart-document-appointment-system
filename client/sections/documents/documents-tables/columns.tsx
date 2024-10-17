@@ -4,6 +4,7 @@ import { Document } from '@/constants/data';
 import { ColumnDef } from '@tanstack/react-table';
 import { CellAction } from './cell-action';
 import moment from 'moment';
+import { formatCurrency } from '@/lib/utils';
 
 export const columns: ColumnDef<Document>[] = [
   {
@@ -25,30 +26,18 @@ export const columns: ColumnDef<Document>[] = [
     enableSorting: false,
     enableHiding: false
   },
-  // {
-  //   accessorKey: 'id',
-  //   header: 'ID'
-  // },
   {
     accessorKey: 'name',
     header: 'NAME'
   },
   {
     accessorKey: 'price',
-    header: 'price'
-  },
-  {
-    accessorKey: 'dayBeforeRelease',
-    header: 'DAYS BEFORE RELEASE'
+    header: 'price',
+    cell: ({ row }) => formatCurrency(row.original.price)
   },
   {
     accessorKey: 'createdAt',
     header: 'CREATED AT',
-    cell: ({ row }) => moment(row.original.createdAt).format('DD MMM YYYY')
-  },
-  {
-    accessorKey: 'updatedAt',
-    header: 'UPDATED AT',
     cell: ({ row }) => moment(row.original.createdAt).format('DD MMM YYYY')
   },
   {

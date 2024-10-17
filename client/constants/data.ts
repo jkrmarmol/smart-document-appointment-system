@@ -1,4 +1,5 @@
 import { NavItem } from '@/types';
+import { Decimal } from '@prisma/client/runtime/library';
 
 export type User = {
   id: number;

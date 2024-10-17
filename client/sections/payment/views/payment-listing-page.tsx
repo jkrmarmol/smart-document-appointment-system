@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import PaymentTable from '../payment-tables';
+import { fetchPayment } from '@/server/payment';
 
 const breadcrumbItems = [
   { title: 'Dashboard', link: '/dashboard' },
@@ -21,39 +22,15 @@ export default async function PaymentListingPage({}: TDocumentListingPage) {
   // Showcasing the use of search params cache in nested RSCs
   const page = searchParamsCache.get('page');
   const search = searchParamsCache.get('q');
-  const gender = searchParamsCache.get('gender');
   const pageLimit = searchParamsCache.get('limit');
 
-  const filters = {
-    page,
-    limit: pageLimit,
-    ...(search && { search }),
-    ...(gender && { genders: gender })
-  };
-
-  // mock api call
-  const data = {
-    total_users: 12,
-    users: [
-      {
-        id: 'dfhwrsfgdfg',
-        name: 'Pick Up',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }
-    ]
-  };
-  const filteredDocuments = data.users.filter((user) => {
-    if (
-      filters.search &&
-      !user.name.toLowerCase().includes(filters.search.toLowerCase())
-    ) {
-      return false;
-    }
-    return true;
-  });
-  const totalData = data.users.length;
-  const payment: Payment[] = filteredDocuments;
+  const {
+    totalPayment,
+    payment
+  }: {
+    payment: Payment[];
+    totalPayment: number;
+  } = await fetchPayment({ page, search, limit: pageLimit });
 
   return (
     <PageContainer scrollable>
@@ -62,19 +39,16 @@ export default async function PaymentListingPage({}: TDocumentListingPage) {
 
         <div className="flex items-start justify-between">
           <Heading
-            title={`Payment (${totalData})`}
+            title={`Payment (${totalPayment})`}
             description="Manage documents (Server side table functionalities.)"
           />
 
-          <Link
-            href={'/dashboard/payment/new'}
-            className={cn(buttonVariants({ variant: 'default' }))}
-          >
+          <Link href={'/dashboard/payment/new'} className={cn(buttonVariants({ variant: 'default' }))}>
             <Plus className="mr-2 h-4 w-4" /> Add New
           </Link>
         </div>
         <Separator />
-        <PaymentTable data={payment} totalData={totalData} />
+        <PaymentTable data={payment} totalData={totalPayment} />
       </div>
     </PageContainer>
   );

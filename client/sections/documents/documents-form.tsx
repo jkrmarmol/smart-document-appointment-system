@@ -4,17 +4,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { createDocument } from '@/server/create-payment';
+import { createDocument } from '@/server/document';
 import { useState } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
@@ -26,7 +19,8 @@ const formSchema = z.object({
   price: z.number().positive('Price must be a positive number')
 });
 
-export default function DocumentsForm() {
+export default function DocumentsForm({ params }: { params: { documentId: string } }) {
+  console.log(params.documentId);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { toast } = useToast();
   const router = useRouter();
@@ -46,8 +40,9 @@ export default function DocumentsForm() {
         price: parseFloat(values.price.toFixed(2))
       });
       if (response.id) {
-        router.push('/dashboard/documents');
         setIsLoading(false);
+        router.push('/dashboard/documents');
+        router.refresh();
         return toast({
           title: 'Document added successfully',
           description: 'Document has been added to the database'
@@ -68,9 +63,7 @@ export default function DocumentsForm() {
   return (
     <Card className="mx-auto w-full">
       <CardHeader>
-        <CardTitle className="text-left text-2xl font-bold">
-          Document Information
-        </CardTitle>
+        <CardTitle className="text-left text-2xl font-bold">Document Information</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -110,9 +103,7 @@ export default function DocumentsForm() {
                           step={0.01}
                           className="pl-9"
                           {...field}
-                          onChange={(e) =>
-                            field.onChange(e.target.valueAsNumber)
-                          }
+                          onChange={(e) => field.onChange(e.target.valueAsNumber)}
                         />
                       </div>
                     </FormControl>

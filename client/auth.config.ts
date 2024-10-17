@@ -30,22 +30,24 @@ const authConfig = {
         }
       },
       async authorize(credentials, req) {
-        const userData = await prisma.users.findFirst({
-          where: {
-            email: credentials.email ?? ''
+        try {
+          const userData = await prisma.users.findFirst({
+            where: {
+              email: credentials.email ?? ''
+            }
+          });
+          if (!userData) return null;
+
+          const checkPasswordCorrect = await compare(credentials.password as string, userData.password);
+          if (checkPasswordCorrect) {
+            return {
+              id: userData.id,
+              email: userData.email
+            };
+          } else {
+            return null;
           }
-        });
-        console.log(userData);
-        if (!userData) return null;
-
-        const checkPasswordCorrect = await compare(credentials.password as string, userData.password);
-
-        if (checkPasswordCorrect) {
-          return {
-            id: userData.id,
-            email: userData.email
-          };
-        } else {
+        } catch (err) {
           return null;
         }
       }

@@ -1,12 +1,12 @@
 'use client';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signIn, useSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
@@ -29,7 +29,6 @@ export default function UserAuthForm() {
     resolver: zodResolver(formSchema),
     defaultValues
   });
-  const session = useSession();
 
   const { toast } = useToast();
   const router = useRouter();
@@ -43,7 +42,6 @@ export default function UserAuthForm() {
         redirect: false,
         callbackUrl: callbackUrl ?? '/dashboard'
       });
-      console.log(response);
       if (response?.code) {
         setIsLoading(false);
         return toast({
@@ -77,12 +75,6 @@ export default function UserAuthForm() {
       }
     }
   };
-
-  useEffect(() => {
-    if (session.status === 'authenticated') {
-      return router.push(callbackUrl ?? '/dashboard');
-    }
-  }, []);
 
   return (
     <>
