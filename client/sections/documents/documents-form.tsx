@@ -7,11 +7,12 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { createDocument } from '@/server/document';
+import { createDocument, fetchDocumentById } from '@/server/document';
 import { useState } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
 import { Switch } from '@/components/ui/switch';
+import { Document } from '@/constants/data';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -21,17 +22,16 @@ const formSchema = z.object({
   isAvailable: z.boolean()
 });
 
-export default function DocumentsForm({ params }: { params: { documentId: string } }) {
-  console.log(params.documentId);
+export default async function DocumentsForm(data: Partial<Document>) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { toast } = useToast();
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
-      price: 0,
-      isAvailable: false
+      name: data.name || '',
+      price: data.price || 0,
+      isAvailable: data.isAvailable || false
     }
   });
 

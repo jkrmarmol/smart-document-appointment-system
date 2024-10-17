@@ -13,6 +13,7 @@ import { Switch } from '@/components/ui/switch';
 import { createDelivery } from '@/server/delivery';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/use-toast';
+import { Delivery } from '@/constants/data';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -21,15 +22,15 @@ const formSchema = z.object({
   isAvailable: z.boolean()
 });
 
-export default function DeliveryForm() {
+export default function DeliveryForm(data: Partial<Delivery>) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const router = useRouter();
   const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
-      isAvailable: false
+      name: data.name || '',
+      isAvailable: data.isAvailable || false
     }
   });
 

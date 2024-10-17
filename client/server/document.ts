@@ -43,3 +43,14 @@ export async function createDocument(data: Prisma.DocumentsCreateInput) {
   const response = await prisma.documents.create({ data });
   return response;
 }
+
+export async function fetchDocumentById(documentId: string) {
+  const checkDocumentExist = await prisma.documents.findFirst({
+    where: { id: documentId }
+  });
+  if (!checkDocumentExist) throw new Error('Document not found');
+  const document = await prisma.documents.findFirst({
+    where: { id: documentId }
+  });
+  return document;
+}

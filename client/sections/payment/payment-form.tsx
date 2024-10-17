@@ -13,6 +13,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
 import { createPayment } from '@/server/payment';
 import { Switch } from '@/components/ui/switch';
+import { Payment } from '@/constants/data';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -21,15 +22,15 @@ const formSchema = z.object({
   isAvailable: z.boolean()
 });
 
-export default function PaymentForm() {
+export default function PaymentForm(data: Partial<Payment>) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { toast } = useToast();
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
-      isAvailable: false
+      name: data.name || '',
+      isAvailable: data.isAvailable || false
     }
   });
 

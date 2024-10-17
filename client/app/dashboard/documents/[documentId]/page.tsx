@@ -1,10 +1,20 @@
 import { DocumentViewPage } from '@/sections/documents/views';
+import { fetchDocumentById } from '@/server/document';
 
 export const metadata = {
   title: 'Dashboard : Employee View'
 };
 
-export default function Page({ params }: { params: { documentId: string } }) {
-  const { documentId } = params;
-  return <DocumentViewPage documentId={documentId} />;
+export default async function Page({ params }: { params: { documentId: string } }) {
+  const documentId = params.documentId;
+  if (documentId === 'new') {
+    return <DocumentViewPage />;
+  }
+  try {
+    const data = await fetchDocumentById(documentId);
+    return <DocumentViewPage {...{ ...data, price: data?.price ? Number(data.price) : 0 }} />;
+  } catch (error) {
+    console.error('Failed to fetch document:', error);
+    return <div>Error loading document.</div>;
+  }
 }

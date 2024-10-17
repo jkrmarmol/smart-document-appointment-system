@@ -40,3 +40,14 @@ export async function createPayment(data: Prisma.PaymentOptionsCreateInput) {
   const response = await prisma.paymentOptions.create({ data });
   return response;
 }
+
+export async function fetchPaymentById(paymentId: string) {
+  const checkPaymentExist = await prisma.paymentOptions.findFirst({
+    where: { id: paymentId }
+  });
+  if (!checkPaymentExist) throw new Error('Payment not found');
+  const payment = await prisma.paymentOptions.findFirst({
+    where: { id: paymentId }
+  });
+  return payment;
+}

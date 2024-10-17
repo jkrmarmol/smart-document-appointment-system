@@ -46,11 +46,11 @@ export const columns: ColumnDef<Payment>[] = [
     header: 'CREATED AT',
     cell: ({ row }) => moment(row.original.createdAt).format('DD MMM YYYY')
   },
-  {
-    accessorKey: 'updatedAt',
-    header: 'UPDATED AT',
-    cell: ({ row }) => moment(row.original.createdAt).format('DD MMM YYYY')
-  },
+  // {
+  //   accessorKey: 'updatedAt',
+  //   header: 'UPDATED AT',
+  //   cell: ({ row }) => moment(row.original.createdAt).format('DD MMM YYYY')
+  // },
   {
     id: 'actions',
     cell: ({ row }) => <CellAction data={row.original} />

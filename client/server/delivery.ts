@@ -40,3 +40,14 @@ export async function createDelivery(data: Prisma.DeliveryOptionsCreateInput) {
   const response = await prisma.deliveryOptions.create({ data });
   return response;
 }
+
+export async function fetchDeliveryById(deliveryId: string) {
+  const checkDeliveryExist = await prisma.deliveryOptions.findFirst({
+    where: { id: deliveryId }
+  });
+  if (!checkDeliveryExist) throw new Error('Delivery not found');
+  const delivery = await prisma.deliveryOptions.findFirst({
+    where: { id: deliveryId }
+  });
+  return delivery;
+}
