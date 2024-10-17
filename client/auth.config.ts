@@ -1,14 +1,26 @@
+// import { PrismaClient } from '@prisma/client';
 import { NextAuthConfig } from 'next-auth';
 import CredentialProvider from 'next-auth/providers/credentials';
-import GithubProvider from 'next-auth/providers/github';
+import { compare } from 'bcryptjs';
 
+// const prisma = new PrismaClient();
 const authConfig = {
+  secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: 'jwt'
+  },
+  callbacks: {
+    session: ({ session, token }) => ({
+      ...session,
+      user: {
+        ...session.user,
+        id: token.sub
+      }
+    })
+  },
   providers: [
-    GithubProvider({
-      clientId: process.env.GITHUB_ID ?? '',
-      clientSecret: process.env.GITHUB_SECRET ?? ''
-    }),
     CredentialProvider({
+      type: 'credentials',
       credentials: {
         email: {
           type: 'email'
@@ -17,26 +29,32 @@ const authConfig = {
           type: 'password'
         }
       },
-      async authorize(credentials, req) {
-        const user = {
-          id: '1',
-          name: 'John',
-          email: credentials?.email as string
-        };
-        if (user) {
-          // Any object returned will be saved in `user` property of the JWT
-          return user;
-        } else {
-          // If you return null then an error will be displayed advising the user to check their details.
-          return null;
-
-          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+      authorize(credentials, req) {
+        if (credentials.email === 'test@mail.com' && credentials.password === '@Test123') {
+          return { email: credentials.email, id: 'asdf' };
         }
+        return null;
+        // const userData = await prisma.users.findFirst({
+        //   where: {
+        //     email: credentials.email ?? ''
+        //   }
+        // });
+        // console.log(userData);
+        // if (!userData) return null;
+
+        // const checkPasswordCorrect = await compare(credentials.password as string, userData.password);
+
+        // if (checkPasswordCorrect) {
+        //   return userData;
+        // } else {
+        //   return null;
+        // }
       }
     })
   ],
   pages: {
-    signIn: '/' //sigin page
+    signIn: '/',
+    error: '/'
   }
 } satisfies NextAuthConfig;
 

@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -16,6 +15,9 @@ import {
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { createDocument } from '@/server/create-payment';
+import { useState } from 'react';
+import { useToast } from '@/components/ui/use-toast';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -25,6 +27,9 @@ const formSchema = z.object({
 });
 
 export default function DocumentsForm() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { toast } = useToast();
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -34,8 +39,30 @@ export default function DocumentsForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const response = await createDocument(values);
-    console.log(response);
+    try {
+      setIsLoading(true);
+      const response = await createDocument({
+        ...values,
+        price: parseFloat(values.price.toFixed(2))
+      });
+      if (response.id) {
+        router.push('/dashboard/documents');
+        setIsLoading(false);
+        return toast({
+          title: 'Document added successfully',
+          description: 'Document has been added to the database'
+        });
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        setIsLoading(false);
+        return toast({
+          title: 'Something went wrong',
+          description: err.message,
+          variant: 'destructive'
+        });
+      }
+    }
   }
 
   return (
@@ -52,6 +79,7 @@ export default function DocumentsForm() {
               <FormField
                 control={form.control}
                 name="name"
+                disabled={isLoading}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Name</FormLabel>
@@ -65,21 +93,11 @@ export default function DocumentsForm() {
               <FormField
                 control={form.control}
                 name="price"
+                disabled={isLoading}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Price</FormLabel>
                     <FormControl>
-                      {/* <div className=" flex flex-row items-center">
-                        <p className="mr-2">₱</p>
-                        <Input
-                          placeholder="Enter document price"
-                          type="number"
-                          {...field}
-                          onChange={(e) =>
-                            field.onChange(e.target.valueAsNumber)
-                          }
-                        />
-                      </div> */}
                       <div className="relative">
                         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                           <span className="text-muted-foreground">₱</span>
@@ -104,7 +122,9 @@ export default function DocumentsForm() {
               />
             </div>
 
-            <Button type="submit">Submit</Button>
+            <Button type="submit" disabled={isLoading}>
+              Submit
+            </Button>
           </form>
         </Form>
       </CardContent>
