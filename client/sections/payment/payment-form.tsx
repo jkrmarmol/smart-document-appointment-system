@@ -11,7 +11,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { useState } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
-import { createPayment } from '@/server/payment';
+import { createPayment, updatePayment } from '@/server/payment';
 import { Switch } from '@/components/ui/switch';
 import { Payment } from '@/constants/data';
 
@@ -59,6 +59,35 @@ export default function PaymentForm(data: Partial<Payment>) {
     }
   }
 
+  async function onUpdate(values: z.infer<typeof formSchema>) {
+    try {
+      setIsLoading(true);
+      if (data.id) {
+        const response = await updatePayment(data.id, values);
+        if (response.id) {
+          router.push('/dashboard/payment');
+          router.refresh();
+          setIsLoading(false);
+          return toast({
+            title: 'Payment updated successfully',
+            description: 'Payment has been updated in the database'
+          });
+        }
+      } else {
+        throw new Error('Payment ID is missing');
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        setIsLoading(false);
+        return toast({
+          title: 'Something went wrong',
+          description: err.message,
+          variant: 'destructive'
+        });
+      }
+    }
+  }
+
   return (
     <Card className="mx-auto w-full">
       <CardHeader>
@@ -66,7 +95,7 @@ export default function PaymentForm(data: Partial<Payment>) {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form onSubmit={form.handleSubmit(!data ? onSubmit : onUpdate)} className="space-y-8">
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <FormField
                 control={form.control}
@@ -106,9 +135,7 @@ export default function PaymentForm(data: Partial<Payment>) {
               )}
             />
 
-            <Button type="submit" disabled={isLoading}>
-              Submit
-            </Button>
+            <Button type="submit">{!data ? 'Submit' : 'Update'}</Button>
           </form>
         </Form>
       </CardContent>

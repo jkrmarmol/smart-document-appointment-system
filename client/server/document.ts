@@ -54,3 +54,15 @@ export async function fetchDocumentById(documentId: string) {
   });
   return document;
 }
+
+export async function updateDocument(documentId: string, data: Prisma.DocumentsUpdateInput) {
+  const checkDocumentExist = await prisma.documents.findFirst({
+    where: { id: documentId }
+  });
+  if (!checkDocumentExist) throw new Error('Document not found');
+  const response = await prisma.documents.update({
+    where: { id: documentId },
+    data
+  });
+  return response;
+}

@@ -51,3 +51,15 @@ export async function fetchPaymentById(paymentId: string) {
   });
   return payment;
 }
+
+export async function updatePayment(paymentId: string, data: Prisma.PaymentOptionsUpdateInput) {
+  const checkPaymentExist = await prisma.paymentOptions.findFirst({
+    where: { id: paymentId }
+  });
+  if (!checkPaymentExist) throw new Error('Payment not found');
+  const response = await prisma.paymentOptions.update({
+    where: { id: paymentId },
+    data
+  });
+  return response;
+}

@@ -8,9 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { is } from 'date-fns/locale';
 import { Switch } from '@/components/ui/switch';
-import { createDelivery } from '@/server/delivery';
+import { createDelivery, updateDelivery } from '@/server/delivery';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/use-toast';
 import { Delivery } from '@/constants/data';
@@ -59,6 +58,35 @@ export default function DeliveryForm(data: Partial<Delivery>) {
     }
   }
 
+  async function onUpdate(values: z.infer<typeof formSchema>) {
+    try {
+      setIsLoading(true);
+      if (data.id) {
+        const response = await updateDelivery(data.id, values);
+        if (response.id) {
+          setIsLoading(false);
+          router.push('/dashboard/delivery');
+          router.refresh();
+          return toast({
+            title: 'Delivery options updated successfully',
+            description: 'Delivery options has been updated in the database'
+          });
+        }
+      } else {
+        throw new Error('Delivery ID is missing');
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        setIsLoading(false);
+        return toast({
+          title: 'Something went wrong',
+          description: err.message,
+          variant: 'destructive'
+        });
+      }
+    }
+  }
+
   return (
     <Card className="mx-auto w-full">
       <CardHeader>
@@ -66,7 +94,7 @@ export default function DeliveryForm(data: Partial<Delivery>) {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form onSubmit={form.handleSubmit(!data ? onSubmit : onUpdate)} className="space-y-8">
             <div className="grid grid-cols-1 items-center gap-6 md:grid-cols-2">
               <FormField
                 control={form.control}
@@ -105,7 +133,7 @@ export default function DeliveryForm(data: Partial<Delivery>) {
               />
             </div>
 
-            <Button type="submit">Submit</Button>
+            <Button type="submit">{!data ? 'Submit' : 'Update'}</Button>
           </form>
         </Form>
       </CardContent>

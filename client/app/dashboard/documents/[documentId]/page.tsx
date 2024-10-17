@@ -2,7 +2,7 @@ import { DocumentViewPage } from '@/sections/documents/views';
 import { fetchDocumentById } from '@/server/document';
 
 export const metadata = {
-  title: 'Dashboard : Employee View'
+  title: 'Dashboard : Document View'
 };
 
 export default async function Page({ params }: { params: { documentId: string } }) {

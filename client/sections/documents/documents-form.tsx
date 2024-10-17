@@ -1,5 +1,4 @@
 'use client';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -7,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { createDocument, fetchDocumentById } from '@/server/document';
+import { createDocument, updateDocument } from '@/server/document';
 import { useState } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
@@ -22,7 +21,7 @@ const formSchema = z.object({
   isAvailable: z.boolean()
 });
 
-export default async function DocumentsForm(data: Partial<Document>) {
+export default function DocumentsForm(data: Partial<Document>) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { toast } = useToast();
   const router = useRouter();
@@ -63,6 +62,36 @@ export default async function DocumentsForm(data: Partial<Document>) {
     }
   }
 
+  async function onUpdate(values: z.infer<typeof formSchema>) {
+    try {
+      setIsLoading(true);
+      if (data.id) {
+        const response = await updateDocument(data.id, {
+          ...values,
+          price: values.price
+        });
+        if (response.id) {
+          setIsLoading(false);
+          router.push('/dashboard/documents');
+          router.refresh();
+          return toast({
+            title: 'Document updated successfully',
+            description: 'Document has been updated in the database'
+          });
+        }
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        setIsLoading(false);
+        return toast({
+          title: 'Something went wrong',
+          description: err.message,
+          variant: 'destructive'
+        });
+      }
+    }
+  }
+
   return (
     <Card className="mx-auto w-full">
       <CardHeader>
@@ -70,7 +99,7 @@ export default async function DocumentsForm(data: Partial<Document>) {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form onSubmit={form.handleSubmit(!data ? onSubmit : onUpdate)} className="space-y-8">
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <FormField
                 control={form.control}
@@ -139,9 +168,7 @@ export default async function DocumentsForm(data: Partial<Document>) {
               />
             </div>
 
-            <Button type="submit" disabled={isLoading}>
-              Submit
-            </Button>
+            <Button type="submit">{!data ? 'Submit' : 'Update'}</Button>
           </form>
         </Form>
       </CardContent>
