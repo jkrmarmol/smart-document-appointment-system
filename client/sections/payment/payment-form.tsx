@@ -12,11 +12,13 @@ import { useState } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
 import { createPayment } from '@/server/payment';
+import { Switch } from '@/components/ui/switch';
 
 const formSchema = z.object({
   name: z.string().min(2, {
     message: 'Name must be at least 2 characters.'
-  })
+  }),
+  isAvailable: z.boolean()
 });
 
 export default function PaymentForm() {
@@ -26,7 +28,8 @@ export default function PaymentForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: ''
+      name: '',
+      isAvailable: false
     }
   });
 
@@ -79,6 +82,28 @@ export default function PaymentForm() {
                 )}
               />
             </div>
+
+            <FormField
+              control={form.control}
+              name="isAvailable"
+              disabled={isLoading}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Availability Status</FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        onBlur={field.onBlur}
+                        disabled={isLoading}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <Button type="submit" disabled={isLoading}>
               Submit

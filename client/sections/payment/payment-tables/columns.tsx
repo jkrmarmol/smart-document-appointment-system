@@ -4,6 +4,7 @@ import { Document, Payment } from '@/constants/data';
 import { ColumnDef } from '@tanstack/react-table';
 import { CellAction } from './cell-action';
 import moment from 'moment';
+import { Badge } from '@/components/ui/badge';
 
 export const columns: ColumnDef<Payment>[] = [
   {
@@ -28,6 +29,17 @@ export const columns: ColumnDef<Payment>[] = [
   {
     accessorKey: 'name',
     header: 'NAME'
+  },
+  {
+    accessorKey: 'isAvailable',
+    header: 'Status',
+    cell: ({ row }) => {
+      if (row.original.isAvailable) {
+        return <Badge className="bg-green-500 text-white">Available</Badge>;
+      } else {
+        return <Badge className="bg-red-500 text-white">Not Available</Badge>;
+      }
+    }
   },
   {
     accessorKey: 'createdAt',

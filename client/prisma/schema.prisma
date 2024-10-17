@@ -48,6 +48,7 @@ model Documents {
   name             String
   price            Decimal            @db.Decimal(10, 2)
   dayBeforeRelease Int                @default(3)
+  isAvailable      Boolean            @default(false)
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
   RequestDocuments RequestDocuments[]
@@ -56,6 +57,7 @@ model Documents {
 model DeliveryOptions {
   id               String             @id @default(uuid())
   name             String
+  isAvailable      Boolean            @default(false)
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
   RequestDocuments RequestDocuments[]
@@ -64,6 +66,7 @@ model DeliveryOptions {
 model PaymentOptions {
   id               String             @id @default(uuid())
   name             String
+  isAvailable      Boolean            @default(false)
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
   DocumentPayment  DocumentPayment[]

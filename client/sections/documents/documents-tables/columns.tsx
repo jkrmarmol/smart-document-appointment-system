@@ -5,6 +5,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { CellAction } from './cell-action';
 import moment from 'moment';
 import { formatCurrency } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
 
 export const columns: ColumnDef<Document>[] = [
   {
@@ -34,6 +35,17 @@ export const columns: ColumnDef<Document>[] = [
     accessorKey: 'price',
     header: 'price',
     cell: ({ row }) => formatCurrency(row.original.price)
+  },
+  {
+    accessorKey: 'isAvailable',
+    header: 'Status',
+    cell: ({ row }) => {
+      if (row.original.isAvailable) {
+        return <Badge className="bg-green-500 text-white">Available</Badge>;
+      } else {
+        return <Badge className="bg-red-500 text-white">Not Available</Badge>;
+      }
+    }
   },
   {
     accessorKey: 'createdAt',

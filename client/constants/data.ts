@@ -115,6 +115,7 @@ export type Document = {
   id: string;
   name: string;
   price: number;
+  isAvailable: boolean;
   dayBeforeRelease: number;
   createdAt: Date;
   updatedAt: Date;
@@ -123,6 +124,7 @@ export type Document = {
 export type Payment = {
   id: string;
   name: string;
+  isAvailable: boolean;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -130,6 +132,7 @@ export type Payment = {
 export type Delivery = {
   id: string;
   name: string;
+  isAvailable: boolean;
   createdAt: Date;
   updatedAt: Date;
 };

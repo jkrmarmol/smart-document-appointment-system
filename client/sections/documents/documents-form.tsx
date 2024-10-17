@@ -11,12 +11,14 @@ import { createDocument } from '@/server/document';
 import { useState } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
+import { Switch } from '@/components/ui/switch';
 
 const formSchema = z.object({
   name: z.string().min(2, {
     message: 'Name must be at least 2 characters.'
   }),
-  price: z.number().positive('Price must be a positive number')
+  price: z.number().positive('Price must be a positive number'),
+  isAvailable: z.boolean()
 });
 
 export default function DocumentsForm({ params }: { params: { documentId: string } }) {
@@ -28,7 +30,8 @@ export default function DocumentsForm({ params }: { params: { documentId: string
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
-      price: 0
+      price: 0,
+      isAvailable: false
     }
   });
 
@@ -83,6 +86,7 @@ export default function DocumentsForm({ params }: { params: { documentId: string
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="price"
@@ -104,6 +108,28 @@ export default function DocumentsForm({ params }: { params: { documentId: string
                           className="pl-9"
                           {...field}
                           onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="isAvailable"
+                disabled={isLoading}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Availability Status</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          onBlur={field.onBlur}
+                          disabled={isLoading}
                         />
                       </div>
                     </FormControl>
