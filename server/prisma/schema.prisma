@@ -1,0 +1,111 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  ADMIN
+}
+
+model Users {
+  id                String           @id @default(uuid())
+  email             String           @unique
+  password          String
+  role              Role             @default(STUDENT)
+  userInformation   UserInformation? @relation(fields: [userInformationId], references: [id])
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  userInformationId String?
+}
+
+model UserInformation {
+  id           String   @id @default(uuid())
+  firstName    String?
+  middleName   String?
+  lastName     String?
+  studentNo    String?
+  specialOrder String?
+  lrn          String?
+  address      String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  Users        Users[]
+}
+
+model Documents {
+  id               String             @id @default(uuid())
+  name             String
+  price            Decimal            @db.Decimal(10, 2)
+  dayBeforeRelease Int                @default(3)
+  isAvailable      Boolean            @default(false)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  RequestDocuments RequestDocuments[]
+}
+
+model DeliveryOptions {
+  id               String             @id @default(uuid())
+  name             String
+  isAvailable      Boolean            @default(false)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  RequestDocuments RequestDocuments[]
+}
+
+model PaymentOptions {
+  id               String             @id @default(uuid())
+  name             String
+  isAvailable      Boolean            @default(false)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  DocumentPayment  DocumentPayment[]
+  RequestDocuments RequestDocuments[]
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+model DocumentPayment {
+  id               String          @id @default(uuid())
+  paymentOptionId  PaymentOptions? @relation(fields: [paymentOptionsId], references: [id])
+  paymentOptionsId String?
+  status           PaymentStatus   @default(PENDING)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+}
+
+enum RequestDocumentsStatus {
+  PENDING
+  PROCESSING
+  READYTOPICKUP
+  DELIVERED
+  CANCELLED
+}
+
+model RequestDocuments {
+  id                String                 @id @default(uuid())
+  document          Documents              @relation(fields: [documentId], references: [id])
+  documentId        String
+  selectedSchedule  DateTime
+  deliverOptions    DeliveryOptions?       @relation(fields: [deliveryOptionsId], references: [id])
+  deliveryOptionsId String?
+  paymentOptions    PaymentOptions?        @relation(fields: [paymentOptionsId], references: [id])
+  paymentOptionsId  String?
+  status            RequestDocumentsStatus @default(PENDING)
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+}
