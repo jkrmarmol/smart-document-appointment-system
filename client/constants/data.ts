@@ -1,4 +1,5 @@
 import { NavItem } from '@/types';
+import { EligibilityStatus } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 
 export type User = {
@@ -116,6 +117,7 @@ export type Document = {
   name: string;
   price: number;
   isAvailable: boolean;
+  eligibility: EligibilityStatus;
   dayBeforeRelease: number;
   createdAt: Date;
   updatedAt: Date;

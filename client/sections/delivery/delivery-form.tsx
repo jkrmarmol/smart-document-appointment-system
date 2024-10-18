@@ -94,7 +94,7 @@ export default function DeliveryForm(data: Partial<Delivery>) {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(!data ? onSubmit : onUpdate)} className="space-y-8">
+          <form onSubmit={form.handleSubmit(!data.id ? onSubmit : onUpdate)} className="space-y-8">
             <div className="grid grid-cols-1 items-center gap-6 md:grid-cols-2">
               <FormField
                 control={form.control}
@@ -133,7 +133,7 @@ export default function DeliveryForm(data: Partial<Delivery>) {
               />
             </div>
 
-            <Button type="submit">{!data ? 'Submit' : 'Update'}</Button>
+            <Button type="submit">{!data.id ? 'Submit' : 'Update'}</Button>
           </form>
         </Form>
       </CardContent>

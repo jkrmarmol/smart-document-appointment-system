@@ -12,13 +12,24 @@ import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
 import { Switch } from '@/components/ui/switch';
 import { Document } from '@/constants/data';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
+import { EligibilityStatus } from '@prisma/client';
 
 const formSchema = z.object({
   name: z.string().min(2, {
     message: 'Name must be at least 2 characters.'
   }),
   price: z.number().positive('Price must be a positive number'),
-  isAvailable: z.boolean()
+  isAvailable: z.boolean(),
+  eligibility: z.enum(['STUDENT', 'GRADUATED', 'BOTH'])
 });
 
 export default function DocumentsForm(data: Partial<Document>) {
@@ -30,7 +41,8 @@ export default function DocumentsForm(data: Partial<Document>) {
     defaultValues: {
       name: data.name || '',
       price: data.price || 0,
-      isAvailable: data.isAvailable || false
+      isAvailable: data.isAvailable || false,
+      eligibility: data.eligibility || 'BOTH'
     }
   });
 
@@ -81,6 +93,7 @@ export default function DocumentsForm(data: Partial<Document>) {
         }
       }
     } catch (err) {
+      console.log(err);
       if (err instanceof Error) {
         setIsLoading(false);
         return toast({
@@ -99,7 +112,7 @@ export default function DocumentsForm(data: Partial<Document>) {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(!data ? onSubmit : onUpdate)} className="space-y-8">
+          <form onSubmit={form.handleSubmit(!data.id ? onSubmit : onUpdate)} className="space-y-8">
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <FormField
                 control={form.control}
@@ -166,9 +179,38 @@ export default function DocumentsForm(data: Partial<Document>) {
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="eligibility"
+                disabled={isLoading}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Availability Status</FormLabel>
+                    <FormControl>
+                      <Select value={field.value} onValueChange={field.onChange} disabled={isLoading}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select eligibility status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Eligibility Status</SelectLabel>
+                            {Object.values(EligibilityStatus).map((status, index) => (
+                              <SelectItem key={index} value={status}>
+                                {status}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
 
-            <Button type="submit">{!data ? 'Submit' : 'Update'}</Button>
+            <Button type="submit">{!data.id ? 'Submit' : 'Update'}</Button>
           </form>
         </Form>
       </CardContent>

@@ -48,6 +48,11 @@ export const columns: ColumnDef<Document>[] = [
     }
   },
   {
+    accessorKey: 'eligibility',
+    header: 'ELIGIBILITY',
+    cell: ({ row }) => <Badge variant="secondary">{row.original.eligibility}</Badge>
+  },
+  {
     accessorKey: 'createdAt',
     header: 'CREATED AT',
     cell: ({ row }) => moment(row.original.createdAt).format('DD MMM YYYY')

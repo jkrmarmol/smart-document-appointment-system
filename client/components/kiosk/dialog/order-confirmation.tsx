@@ -1,13 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import {
-  Tab,
-  Dialog,
-  DialogBackdrop,
-  DialogPanel,
-  DialogTitle,
-  Button
-} from '@headlessui/react';
+import { Tab, Dialog, DialogBackdrop, DialogPanel, DialogTitle, Button } from '@headlessui/react';
 import { Poppins } from 'next/font/google';
 import YourOrder from '../order-confirmation/your-order';
 import ShippingOptions from '../order-confirmation/shipping-options';
@@ -28,10 +21,7 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function OrderConfirmation(props: {
-  open: boolean;
-  onClose: () => void;
-}) {
+export default function OrderConfirmation(props: { open: boolean; onClose: () => void }) {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -119,13 +109,7 @@ export default function OrderConfirmation(props: {
     });
   };
 
-  const tabs = [
-    'Your Order',
-    'Shipping Options',
-    'Address',
-    'Schedule',
-    'Payment Methods'
-  ];
+  const tabs = ['Your Order', 'Shipping Options', 'Address', 'Schedule', 'Payment Methods'];
 
   return (
     <Dialog
@@ -147,10 +131,7 @@ export default function OrderConfirmation(props: {
             transition
             className="data-[closed]:transform-[scale(95%)] w-full max-w-4xl rounded-xl bg-white p-6 backdrop-blur-2xl duration-300 ease-out data-[closed]:opacity-0 "
           >
-            <DialogTitle
-              as="h3"
-              className={` text-lg font-medium text-black ${poppins.className} mb-12 font-semibold`}
-            >
+            <DialogTitle as="h3" className={` text-lg font-medium text-black ${poppins.className} mb-12 font-semibold`}>
               Confirm Your Order
             </DialogTitle>
 

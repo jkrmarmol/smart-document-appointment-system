@@ -1,14 +1,9 @@
 import React from 'react';
-import {
-  Button,
-  Dialog,
-  DialogBackdrop,
-  DialogPanel,
-  DialogTitle,
-  Input
-} from '@headlessui/react';
+import { Button, Dialog, DialogBackdrop, DialogPanel, DialogTitle, Input } from '@headlessui/react';
 import { Poppins } from 'next/font/google';
 import { useRouter } from 'next/navigation';
+import { fetchStudentNumber } from '@/server/kiosk';
+import Swal from 'sweetalert2';
 
 const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '900'],
@@ -17,17 +12,44 @@ const poppins = Poppins({
 
 export default function StartTransaction(props: {
   modal: { checkStatus: boolean; startTransaction: boolean };
-  setModal: React.Dispatch<
-    React.SetStateAction<{ checkStatus: boolean; startTransaction: boolean }>
-  >;
+  setModal: React.Dispatch<React.SetStateAction<{ checkStatus: boolean; startTransaction: boolean }>>;
 }) {
+  const [studentNumber, setStudentNumber] = React.useState('');
   const router = useRouter();
+
+  async function onSubmit() {
+    const response = await fetchStudentNumber(studentNumber);
+    if (!response) {
+      return Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Student number not found.',
+        customClass: {
+          container: `${poppins.className}`,
+          confirmButton: ` bg-red-500 text-white hover:bg-red-600 w-[100px] ${poppins.className} rounded-lg p-3 font-normal`
+        }
+      });
+    }
+    props.setModal((prev) => ({
+      ...prev,
+      startTransaction: false
+    }));
+    Swal.fire({
+      icon: 'success',
+      title: 'Success',
+      text: 'Student number found.',
+      customClass: {
+        container: `${poppins.className}`,
+        confirmButton: ` bg-blue-500 text-white hover:bg-blue-600 ${poppins.className} rounded-lg p-3 font-normal`
+      }
+    });
+    return router.push('/kiosk/order');
+  }
+
   return (
     <Dialog
       open={props.modal.startTransaction}
-      onClose={() =>
-        props.setModal((prev) => ({ ...prev, startTransaction: false }))
-      }
+      onClose={() => props.setModal((prev) => ({ ...prev, startTransaction: false }))}
       className="relative z-10 "
     >
       <DialogBackdrop
@@ -47,9 +69,7 @@ export default function StartTransaction(props: {
             >
               Student Number
             </DialogTitle>
-            <p
-              className={`mt-1 text-sm text-black/30 ${poppins.className} mb-4 text-center font-medium`}
-            >
+            <p className={`mt-1 text-sm text-black/30 ${poppins.className} mb-4 text-center font-medium`}>
               Please enter your student number before to proceed.
             </p>
             <Input
@@ -57,6 +77,7 @@ export default function StartTransaction(props: {
               maxLength={15}
               name="studentNumber"
               type="text"
+              onChange={(e) => setStudentNumber(e.target.value)}
               className={`h-14 w-full rounded-xl bg-blue-100 text-center text-black focus:outline-1 data-[focus]:bg-blue-100 ${poppins.className} caret text-2xl font-semibold uppercase caret-blue-500 focus:outline-none`}
             />
             <div className="mt-4 flex justify-end gap-2">
@@ -75,11 +96,12 @@ export default function StartTransaction(props: {
               <Button
                 className={`inline-flex items-center gap-2 rounded-md bg-blue-500 px-5 py-2 text-sm/6 font-medium text-white shadow-inner  focus:outline-none data-[hover]:bg-blue-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white ${poppins.className} font-semibold`}
                 onClick={() => {
-                  props.setModal((prev) => ({
-                    ...prev,
-                    startTransaction: false
-                  }));
-                  return router.push('/kiosk/order');
+                  onSubmit();
+                  // props.setModal((prev) => ({
+                  //   ...prev,
+                  //   startTransaction: false
+                  // }));
+                  // return router.push('/kiosk/order');
                 }}
               >
                 Confirm
