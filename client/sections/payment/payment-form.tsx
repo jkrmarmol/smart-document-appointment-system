@@ -96,7 +96,7 @@ export default function PaymentForm(data: Partial<Payment>) {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(!data ? onSubmit : onUpdate)} className="space-y-8">
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="grid grid-cols-1 items-center gap-6 md:grid-cols-2">
               <FormField
                 control={form.control}
                 name="name"
@@ -111,29 +111,29 @@ export default function PaymentForm(data: Partial<Payment>) {
                   </FormItem>
                 )}
               />
-            </div>
 
-            <FormField
-              control={form.control}
-              name="isAvailable"
-              disabled={isLoading}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Availability Status</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        onBlur={field.onBlur}
-                        disabled={isLoading}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="isAvailable"
+                disabled={isLoading}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Availability Status</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          onBlur={field.onBlur}
+                          disabled={isLoading}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <Button type="submit">{!data ? 'Submit' : 'Update'}</Button>
           </form>

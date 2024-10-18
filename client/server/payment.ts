@@ -63,3 +63,14 @@ export async function updatePayment(paymentId: string, data: Prisma.PaymentOptio
   });
   return response;
 }
+
+export async function deletePayment(paymentId: string) {
+  const checkPaymentExist = await prisma.paymentOptions.findFirst({
+    where: { id: paymentId }
+  });
+  if (!checkPaymentExist) throw new Error('Payment not found');
+  const response = await prisma.paymentOptions.delete({
+    where: { id: paymentId }
+  });
+  return response;
+}

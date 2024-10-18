@@ -8,9 +8,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import { useToast } from '@/components/ui/use-toast';
 import { Payment } from '@/constants/data';
+import { deletePayment } from '@/server/payment';
 import { Edit, MoreHorizontal, Trash } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 interface CellActionProps {
@@ -21,8 +23,38 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
+  const { toast } = useToast();
 
-  const onConfirm = async () => {};
+  const onConfirm = async () => {
+    try {
+      setLoading(true);
+      const response = await deletePayment(data.id);
+      if (response.id) {
+        router.refresh();
+        setLoading(false);
+        setOpen(false);
+        return toast({
+          title: 'Payment deleted',
+          description: 'Payment deleted successfully'
+        });
+      }
+      setLoading(false);
+      setOpen(false);
+      return toast({
+        title: 'Failed to delete payment',
+        description: 'Failed to delete payment'
+      });
+    } catch (err) {
+      if (err instanceof Error) {
+        setLoading(false);
+        setOpen(false);
+        return toast({
+          title: 'Something went wrong',
+          description: err.message
+        });
+      }
+    }
+  };
 
   return (
     <>

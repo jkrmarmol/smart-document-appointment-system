@@ -2,7 +2,7 @@ import { DeliveryViewPage } from '@/sections/delivery/views';
 import { fetchDeliveryById } from '@/server/delivery';
 
 export const metadata = {
-  title: 'Dashboard : Payment View'
+  title: 'Dashboard : Delivery Options View'
 };
 
 export default async function Page({ params }: { params: { deliveryId: string } }) {

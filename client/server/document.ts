@@ -66,3 +66,14 @@ export async function updateDocument(documentId: string, data: Prisma.DocumentsU
   });
   return response;
 }
+
+export async function deleteDocument(documentId: string) {
+  const checkDocumentExist = await prisma.documents.findFirst({
+    where: { id: documentId }
+  });
+  if (!checkDocumentExist) throw new Error('Document not found');
+  const response = await prisma.documents.delete({
+    where: { id: documentId }
+  });
+  return response;
+}

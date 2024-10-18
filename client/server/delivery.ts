@@ -63,3 +63,14 @@ export async function updateDelivery(deliveryId: string, data: Prisma.DeliveryOp
   });
   return response;
 }
+
+export async function deleteDelivery(deliveryId: string) {
+  const checkDeliveryExist = await prisma.deliveryOptions.findFirst({
+    where: { id: deliveryId }
+  });
+  if (!checkDeliveryExist) throw new Error('Delivery not found');
+  const response = await prisma.deliveryOptions.delete({
+    where: { id: deliveryId }
+  });
+  return response;
+}

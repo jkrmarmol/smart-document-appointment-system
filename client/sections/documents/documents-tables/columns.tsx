@@ -33,12 +33,12 @@ export const columns: ColumnDef<Document>[] = [
   },
   {
     accessorKey: 'price',
-    header: 'price',
+    header: 'PRICE',
     cell: ({ row }) => formatCurrency(row.original.price)
   },
   {
     accessorKey: 'isAvailable',
-    header: 'Status',
+    header: 'STATUS',
     cell: ({ row }) => {
       if (row.original.isAvailable) {
         return <Badge className="bg-green-500 text-white">Available</Badge>;
