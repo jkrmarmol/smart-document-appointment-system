@@ -3,7 +3,10 @@ import {
   Controller,
   ExceptionFilter,
   Get,
+  Param,
   Post,
+  Query,
+  Req,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -14,6 +17,9 @@ import { SignInDto } from './dto/sign-in.dto';
 import { Roles } from 'src/roles/roles.decorator';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { Public } from './auth.decorator';
+import { UserAuth } from 'typings';
+import { VerifyEmailDto } from './dto/verify-email.dto';
+import { VerifyOtpDto } from './dto/verify-otp.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -42,5 +48,17 @@ export class AuthController {
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;
+  }
+
+  @Public()
+  @Post('verify-email')
+  verifyEmail(@Query() data: VerifyEmailDto) {
+    return this.authService.verifyEmail(data);
+  }
+
+  @Public()
+  @Post('verify-otp')
+  verifyOTP(@Body() data: VerifyOtpDto) {
+    return this.authService.verifyOTP(data);
   }
 }
