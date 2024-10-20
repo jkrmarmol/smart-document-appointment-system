@@ -11,12 +11,11 @@ import { AuthService } from './auth.service';
 import { SignUpDto } from './dto/sign-up.dto';
 import { Role, Users } from '@prisma/client';
 import { SignInDto } from './dto/sign-in.dto';
-import { AuthGuard } from './auth.guard';
 import { Roles } from 'src/roles/roles.decorator';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { Public } from './auth.decorator';
 
-@Controller('api/v1/auth')
+@Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 

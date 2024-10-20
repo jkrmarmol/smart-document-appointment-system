@@ -19,14 +19,13 @@ enum Role {
 }
 
 model Users {
-  id                String           @id @default(uuid())
-  email             String           @unique
-  password          String
-  role              Role             @default(STUDENT)
-  userInformation   UserInformation? @relation(fields: [userInformationId], references: [id])
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
-  userInformationId String?
+  id              String           @id @default(uuid())
+  email           String           @unique
+  password        String
+  role            Role             @default(STUDENT)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  UserInformation UserInformation?
 }
 
 model UserInformation {
@@ -38,9 +37,10 @@ model UserInformation {
   specialOrder String?
   lrn          String?
   address      String?
+  users        Users    @relation(fields: [userId], references: [id])
+  userId       String   @unique
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  Users        Users[]
 }
 
 model Documents {

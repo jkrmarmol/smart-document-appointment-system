@@ -9,7 +9,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { SignUpDto } from './dto/sign-up.dto';
 import { Users } from '@prisma/client';
 import { SignInDto } from './dto/sign-in.dto';
-import { compare } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -33,9 +33,12 @@ export class AuthService {
     });
     // If user exists, throw a conflict exception
     if (checkExists) throw new ConflictException('User Already Exists');
+    // Hash the user's password
+    const hashPassword = await hash(data.password, 12);
     // Create and return the new user
-
-    return this.prismaService.users.create({ data });
+    return this.prismaService.users.create({
+      data: { ...data, password: hashPassword },
+    });
   }
 
   async signIn(data: SignInDto) {

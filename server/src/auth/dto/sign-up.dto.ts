@@ -35,12 +35,4 @@ export class SignUpDto {
     },
   )
   password: string;
-
-  /**
-   * The role of the user.
-   * Must be a valid enum value from Role.
-   */
-  @IsNotEmpty()
-  @IsEnum(Role)
-  role: Role;
 }
