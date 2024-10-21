@@ -44,7 +44,6 @@ export default function HomeScreen() {
           />
           <View
             style={{
-              width: "80%",
               marginVertical: moderateScale(10),
             }}
           >
@@ -52,7 +51,7 @@ export default function HomeScreen() {
               style={{
                 textAlign: "center",
                 fontFamily: "GGSansExtraBold",
-                fontSize: moderateScale(48),
+                fontSize: moderateScale(52),
                 textTransform: "uppercase",
                 letterSpacing: -2,
                 paddingTop: moderateScale(16),
@@ -67,7 +66,7 @@ export default function HomeScreen() {
                 textAlign: "center",
                 fontFamily: "GGSansMedium",
                 fontSize: moderateScale(14),
-                lineHeight: moderateScale(20),
+                lineHeight: moderateScale(14),
                 letterSpacing: 2,
                 color: "#fff",
               }}

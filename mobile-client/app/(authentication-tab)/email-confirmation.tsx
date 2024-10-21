@@ -1,11 +1,11 @@
-import { Text, ScrollView, useWindowDimensions, View, TextInput, TouchableOpacity } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
+import { Text, ScrollView, useWindowDimensions, View, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { OtpInput, OtpInputRef } from "react-native-otp-entry";
 import { moderateScale } from "react-native-size-matters";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import Button from "@/components/ui/button";
 import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
 
 export default function EmailConfirmation() {
   const { width } = useWindowDimensions();
@@ -110,7 +110,7 @@ export default function EmailConfirmation() {
                 marginTop: moderateScale(60),
               }}
             >
-              <Button>Verify</Button>
+              <Button onPress={() => router.push("/(authentication-tab)/information-registration")}>Verify</Button>
             </View>
           </View>
         </SafeAreaView>

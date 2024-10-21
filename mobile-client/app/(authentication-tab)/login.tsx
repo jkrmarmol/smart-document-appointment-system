@@ -6,6 +6,7 @@ import { moderateScale } from "react-native-size-matters";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Button from "@/components/ui/button";
 import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
 
 export default function Login() {
   const { width } = useWindowDimensions();
@@ -135,7 +136,7 @@ export default function Login() {
                 marginTop: moderateScale(60),
               }}
             >
-              <Button>Log In</Button>
+              <Button onPress={() => router.push("/(dashboard-tab)/home")}>Log In</Button>
             </View>
 
             <View
@@ -152,7 +153,7 @@ export default function Login() {
                   fontFamily: "GGSansSemiBold",
                 }}
               >
-                Don’t have an account? Register
+                Don’t have an account? Register{" "}
               </Text>
               <TouchableOpacity>
                 <Text
@@ -162,7 +163,6 @@ export default function Login() {
                     textDecorationLine: "underline",
                   }}
                 >
-                  {" "}
                   here
                 </Text>
               </TouchableOpacity>
