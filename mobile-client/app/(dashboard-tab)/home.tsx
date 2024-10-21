@@ -1,9 +1,8 @@
 import { ScrollView, Text, useWindowDimensions, View, StyleSheet } from "react-native";
 import React from "react";
-import Profile from "./profile";
 import ProfileActive from "@/components/svg/profile-active";
 import { moderateScale } from "react-native-size-matters";
-import { AntDesign, FontAwesome, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
 export default function Home() {
   const { width } = useWindowDimensions();
@@ -47,15 +46,15 @@ export default function Home() {
           >
             <Text
               style={{
-                fontFamily: "GGSansMedium",
+                fontFamily: "GGSansSemiBold",
                 fontSize: moderateScale(14),
               }}
             >
-              Good Morning!,
+              Good Morning!
             </Text>
             <Text
               style={{
-                fontFamily: "GGSansSemiBold",
+                fontFamily: "GGSansBold",
                 fontSize: moderateScale(16),
                 marginTop: moderateScale(-5),
               }}
@@ -65,17 +64,6 @@ export default function Home() {
           </View>
         </View>
 
-        {/* <View
-          style={{
-            alignItems: "center",
-            flexDirection: "row",
-            backgroundColor: "#fff",
-            padding: moderateScale(16),
-            borderRadius: moderateScale(10),
-          }}
-        >
-
-        </View> */}
         <View style={styles.card}>
           <View style={styles.row}>
             <StatusItem icon={<FontAwesome name="check" size={24} color="green" />} label="Completed" count={24} />
@@ -102,13 +90,7 @@ export default function Home() {
 function StatusItem({ icon, label, count }: { icon: JSX.Element; label: string; count: number }) {
   return (
     <View style={styles.item}>
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
+      <View style={styles.iconCount}>
         {icon}
         <Text style={styles.count}>{count}</Text>
       </View>
@@ -118,6 +100,11 @@ function StatusItem({ icon, label, count }: { icon: JSX.Element; label: string; 
 }
 
 const styles = StyleSheet.create({
+  iconCount: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   card: {
     backgroundColor: "#fff",
     borderRadius: 12,
@@ -131,12 +118,14 @@ const styles = StyleSheet.create({
   item: {
     alignItems: "center",
     flex: 1,
+    padding: moderateScale(10),
   },
   count: {
     fontSize: 24,
     fontWeight: "bold",
     marginVertical: 8,
     fontFamily: "GGSansBold",
+    marginLeft: 2,
   },
   label: {
     fontSize: 14,

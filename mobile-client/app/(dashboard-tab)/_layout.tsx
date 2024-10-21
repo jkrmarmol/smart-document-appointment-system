@@ -27,6 +27,9 @@ export default function DashboardTab() {
         headerShown: false,
         tabBarStyle: {
           height: moderateScale(55),
+          backgroundColor: "#fff",
+          elevation: 0,
+          shadowOpacity: 0,
         },
         tabBarHideOnKeyboard: true,
         tabBarIcon: ({ focused }) => {
@@ -72,7 +75,22 @@ export default function DashboardTab() {
           },
         }}
       />
-      <Tabs.Screen name="documents" />
+      <Tabs.Screen
+        name="documents"
+        options={{
+          headerShown: true,
+          headerTitle: "DOCUMENTS",
+          headerTitleStyle: {
+            fontFamily: "GGSansBold",
+            color: "#007AEB",
+          },
+          headerStyle: {
+            backgroundColor: "transparent",
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+        }}
+      />
       <Tabs.Screen name="transaction" />
       <Tabs.Screen name="profile" />
     </Tabs>
