@@ -48,3 +48,17 @@ export interface IPostEmailConfirmationResponse extends Partial<IExceptionRespon
 }
 
 export interface IPostVerifyOtpResponse extends Partial<IExceptionResponse> {}
+
+export interface IInformationRegistrationSliceInitialState {
+  personalInformation: {
+    firstName: string | null;
+    middleName: string | null;
+    lastName: string | null;
+    address: string | null;
+  };
+  academicInformation: {
+    studentNo: string | null;
+    specialOrderNo: string | null;
+    lrn: string | null;
+  };
+}

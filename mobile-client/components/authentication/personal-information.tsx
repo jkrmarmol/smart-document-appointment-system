@@ -1,8 +1,17 @@
 import { View, Text, TextInput, ScrollView } from "react-native";
 import React from "react";
 import { moderateScale } from "react-native-size-matters";
+import { useAppDispatch, useAppSelector } from "@/hooks/useTypedSelector";
+import {
+  setPersonalInformationAddress,
+  setPersonalInformationFirstName,
+  setPersonalInformationLastName,
+  setPersonalInformationMiddleName,
+} from "@/redux/auth/informationRegistrationSlice";
 
 export default function PersonalInformation() {
+  const dispatch = useAppDispatch();
+  const selectPersonalInformation = useAppSelector((state) => state.informationRegistrationReducer.personalInformation);
   return (
     <View
       style={{
@@ -64,6 +73,8 @@ export default function PersonalInformation() {
                 fontSize: moderateScale(13),
                 fontFamily: "GGSansMedium",
               }}
+              onChangeText={(text) => dispatch(setPersonalInformationFirstName(text))}
+              value={selectPersonalInformation.firstName ?? ""}
             />
           </View>
 
@@ -87,6 +98,8 @@ export default function PersonalInformation() {
                 fontSize: moderateScale(13),
                 fontFamily: "GGSansMedium",
               }}
+              onChangeText={(text) => dispatch(setPersonalInformationMiddleName(text))}
+              value={selectPersonalInformation.middleName ?? ""}
             />
           </View>
 
@@ -110,6 +123,8 @@ export default function PersonalInformation() {
                 fontSize: moderateScale(13),
                 fontFamily: "GGSansMedium",
               }}
+              onChangeText={(text) => dispatch(setPersonalInformationLastName(text))}
+              value={selectPersonalInformation.lastName ?? ""}
             />
           </View>
 
@@ -136,6 +151,8 @@ export default function PersonalInformation() {
                 fontFamily: "GGSansMedium",
                 height: moderateScale(100),
               }}
+              onChangeText={(text) => dispatch(setPersonalInformationAddress(text))}
+              value={selectPersonalInformation.address ?? ""}
             />
           </View>
         </View>

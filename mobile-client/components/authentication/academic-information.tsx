@@ -1,8 +1,16 @@
 import { View, Text, TextInput, ScrollView } from "react-native";
 import React from "react";
 import { moderateScale } from "react-native-size-matters";
+import { useAppDispatch, useAppSelector } from "@/hooks/useTypedSelector";
+import {
+  setAcademicInformationLRN,
+  setAcademicInformationSpecialOrderNo,
+  setAcademicInformationStudentNo,
+} from "@/redux/auth/informationRegistrationSlice";
 
 export default function AcademicInformation() {
+  const dispatch = useAppDispatch();
+  const selectAcademicInformation = useAppSelector((state) => state.informationRegistrationReducer.academicInformation);
   return (
     <View
       style={{
@@ -64,6 +72,8 @@ export default function AcademicInformation() {
                 fontSize: moderateScale(13),
                 fontFamily: "GGSansMedium",
               }}
+              onChangeText={(text) => dispatch(setAcademicInformationStudentNo(text))}
+              value={selectAcademicInformation.studentNo ?? ""}
             />
           </View>
 
@@ -87,6 +97,8 @@ export default function AcademicInformation() {
                 fontSize: moderateScale(13),
                 fontFamily: "GGSansMedium",
               }}
+              onChangeText={(text) => dispatch(setAcademicInformationSpecialOrderNo(text))}
+              value={selectAcademicInformation.specialOrderNo ?? ""}
             />
           </View>
 
@@ -110,6 +122,8 @@ export default function AcademicInformation() {
                 fontSize: moderateScale(13),
                 fontFamily: "GGSansMedium",
               }}
+              onChangeText={(text) => dispatch(setAcademicInformationLRN(text))}
+              value={selectAcademicInformation.lrn ?? ""}
             />
           </View>
         </View>
