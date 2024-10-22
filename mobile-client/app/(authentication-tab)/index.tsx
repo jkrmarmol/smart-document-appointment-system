@@ -2,12 +2,31 @@ import { useWindowDimensions, View, Text } from "react-native";
 import { Image } from "expo-image";
 import { moderateScale } from "react-native-size-matters";
 import { LinearGradient } from "expo-linear-gradient";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import Button from "@/components/ui/button";
+import { useGetSessionQuery } from "@/redux/auth/authApiSlice";
+import { useCallback } from "react";
 
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
+  const { data: dataGetSession, status: statusGetSession } = useGetSessionQuery({});
 
+  useFocusEffect(
+    useCallback(() => {
+      if (dataGetSession?.data.id && dataGetSession.data.emailVerified && dataGetSession.data.UserInformation) {
+        return router.push("/(dashboard-tab)/home");
+      }
+      if (dataGetSession?.data.id && !dataGetSession.data.emailVerified) {
+        return router.push({
+          pathname: "/(authentication-tab)/email-confirmation",
+          params: { email: dataGetSession.data.email },
+        });
+      }
+      if (dataGetSession?.data.id && dataGetSession.data.emailVerified && !dataGetSession.data.UserInformation) {
+        return router.push("/(authentication-tab)/information-registration");
+      }
+    }, [statusGetSession])
+  );
   return (
     <LinearGradient
       colors={["#E900C4", "#007AEB"]}
