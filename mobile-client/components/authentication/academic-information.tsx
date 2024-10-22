@@ -1,4 +1,4 @@
-import { View, Text, TextInput } from "react-native";
+import { View, Text, TextInput, ScrollView } from "react-native";
 import React from "react";
 import { moderateScale } from "react-native-size-matters";
 
@@ -12,100 +12,108 @@ export default function AcademicInformation() {
         gap: moderateScale(10),
       }}
     >
-      <View
-        style={{
-          marginBottom: moderateScale(20),
-        }}
-      >
-        <Text
+      <ScrollView>
+        <View
           style={{
-            fontFamily: "GGSansBold",
-            fontSize: moderateScale(20),
-            marginBottom: moderateScale(8),
+            marginBottom: moderateScale(20),
           }}
         >
-          Academic Information
-        </Text>
-        <Text
-          style={{
-            fontFamily: "GGSansMedium",
-            fontSize: moderateScale(14),
-            opacity: 0.4,
-            lineHeight: moderateScale(14),
-          }}
-        >
-          Please fill in your academic details below. Ensure the information is accurate and up to date.
-        </Text>
-      </View>
+          <Text
+            style={{
+              fontFamily: "GGSansBold",
+              fontSize: moderateScale(20),
+              marginBottom: moderateScale(8),
+            }}
+          >
+            Academic Information
+          </Text>
+          <Text
+            style={{
+              fontFamily: "GGSansMedium",
+              fontSize: moderateScale(14),
+              opacity: 0.4,
+              lineHeight: moderateScale(14),
+            }}
+          >
+            Please fill in your academic details below. Ensure the information is accurate and up to date.
+          </Text>
+        </View>
 
-      <View>
-        <Text
+        <View
           style={{
-            fontSize: moderateScale(13),
-            fontFamily: "GGSansSemiBold",
-            marginBottom: moderateScale(5),
+            gap: moderateScale(20),
           }}
         >
-          Student No.
-        </Text>
-        <TextInput
-          cursorColor={"#000"}
-          placeholder="Enter your student no."
-          style={{
-            backgroundColor: "#0000000D",
-            padding: moderateScale(10),
-            borderRadius: moderateScale(8),
-            fontSize: moderateScale(15),
-            fontFamily: "GGSansMedium",
-          }}
-        />
-      </View>
+          <View>
+            <Text
+              style={{
+                fontSize: moderateScale(13),
+                fontFamily: "GGSansSemiBold",
+                marginBottom: moderateScale(5),
+              }}
+            >
+              Student No.
+            </Text>
+            <TextInput
+              cursorColor={"#000"}
+              placeholder="Enter your student no."
+              style={{
+                backgroundColor: "#0000000D",
+                padding: moderateScale(10),
+                borderRadius: moderateScale(8),
+                fontSize: moderateScale(13),
+                fontFamily: "GGSansMedium",
+              }}
+            />
+          </View>
 
-      <View>
-        <Text
-          style={{
-            fontSize: moderateScale(13),
-            fontFamily: "GGSansSemiBold",
-            marginBottom: moderateScale(5),
-          }}
-        >
-          Special Order (if graduated)
-        </Text>
-        <TextInput
-          cursorColor={"#000"}
-          placeholder="Enter your special order"
-          style={{
-            backgroundColor: "#0000000D",
-            padding: moderateScale(10),
-            borderRadius: moderateScale(8),
-            fontSize: moderateScale(15),
-            fontFamily: "GGSansMedium",
-          }}
-        />
-      </View>
+          <View>
+            <Text
+              style={{
+                fontSize: moderateScale(13),
+                fontFamily: "GGSansSemiBold",
+                marginBottom: moderateScale(5),
+              }}
+            >
+              Special Order (if graduated)
+            </Text>
+            <TextInput
+              cursorColor={"#000"}
+              placeholder="Enter your special order"
+              style={{
+                backgroundColor: "#0000000D",
+                padding: moderateScale(10),
+                borderRadius: moderateScale(8),
+                fontSize: moderateScale(13),
+                fontFamily: "GGSansMedium",
+              }}
+            />
+          </View>
 
-      <View>
-        <Text
-          style={{
-            fontSize: moderateScale(13),
-            fontFamily: "GGSansSemiBold",
-            marginBottom: moderateScale(5),
-          }}
-        >
-          LRN
-        </Text>
-        <TextInput
-          cursorColor={"#000"}
-          placeholder="Enter your LRN"
-          style={{
-            backgroundColor: "#0000000D",
-            padding: moderateScale(10),
-            borderRadius: moderateScale(8),
-            fontSize: moderateScale(15),
-            fontFamily: "GGSansMedium",
-          }}
-        />
-      </View>
+          <View>
+            <Text
+              style={{
+                fontSize: moderateScale(13),
+                fontFamily: "GGSansSemiBold",
+                marginBottom: moderateScale(5),
+              }}
+            >
+              LRN
+            </Text>
+            <TextInput
+              cursorColor={"#000"}
+              placeholder="Enter your LRN"
+              style={{
+                backgroundColor: "#0000000D",
+                padding: moderateScale(10),
+                borderRadius: moderateScale(8),
+                fontSize: moderateScale(13),
+                fontFamily: "GGSansMedium",
+              }}
+            />
+          </View>
+        </View>
+      </ScrollView>
     </View>
   );
 }

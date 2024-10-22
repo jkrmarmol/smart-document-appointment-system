@@ -17,6 +17,7 @@ export default function DocumentItem() {
         width: (90 / 100) * width,
         borderRadius: moderateScale(10),
         elevation: 1,
+        // marginVertical: moderateScale(4),
       }}
     >
       <View

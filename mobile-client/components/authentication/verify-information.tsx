@@ -38,7 +38,7 @@ export default function VerifyInformation() {
       </View>
 
       <View style={style.informationItemViewStyle}>
-        <Text style={style.labelTextStyle}>Special Order</Text>
+        <Text style={style.labelTextStyle}>Special Order No</Text>
         <Text style={style.inputTextStyle}>N/A</Text>
       </View>
 
@@ -62,6 +62,7 @@ const style = StyleSheet.create({
   },
   inputTextStyle: {
     fontFamily: "GGSansSemiBold",
-    fontSize: moderateScale(14),
+    fontSize: moderateScale(13),
+    opacity: 0.6,
   },
 });

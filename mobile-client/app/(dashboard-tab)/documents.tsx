@@ -1,17 +1,15 @@
-import { ScrollView, TextInput, TouchableOpacity, useWindowDimensions, View, Text } from "react-native";
-import React from "react";
+import { ScrollView, TextInput, TouchableOpacity, useWindowDimensions, View } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { moderateScale } from "react-native-size-matters";
-import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
-import Badge from "@/components/ui/badge-status";
-import BadgeStatus from "@/components/ui/badge-status";
+import { AntDesign } from "@expo/vector-icons";
 import DocumentItem from "@/components/ui/document-item";
+import { router } from "expo-router";
 
 export default function Documents() {
   const { width } = useWindowDimensions();
   return (
-    <ScrollView
-      contentContainerStyle={{
+    <View
+      style={{
         backgroundColor: "#F5F6FA",
         alignItems: "center",
         flex: 1,
@@ -54,6 +52,7 @@ export default function Documents() {
           </View>
 
           <TouchableOpacity
+            onPress={() => router.push("/(dashboard-screen)/request-document")}
             style={{
               backgroundColor: "#fff",
               borderRadius: moderateScale(10),
@@ -69,17 +68,40 @@ export default function Documents() {
         </View>
       </View>
 
-      <View
-        style={{
+      <ScrollView
+        contentContainerStyle={{
+          paddingVertical: moderateScale(20),
+          width: width,
+          alignItems: "center",
           gap: moderateScale(10),
-          marginTop: moderateScale(20),
         }}
       >
         <DocumentItem />
         <DocumentItem />
         <DocumentItem />
         <DocumentItem />
-      </View>
-    </ScrollView>
+        <DocumentItem />
+        <DocumentItem />
+        <DocumentItem />
+        <DocumentItem />
+        <DocumentItem />
+        <DocumentItem />
+        <DocumentItem />
+        <DocumentItem />
+        <DocumentItem />
+        <DocumentItem />
+        <DocumentItem />
+        <DocumentItem />
+        <DocumentItem />
+        <DocumentItem />
+        <DocumentItem />
+        <DocumentItem />
+        <DocumentItem />
+        <DocumentItem />
+        <DocumentItem />
+        <DocumentItem />
+        <DocumentItem />
+      </ScrollView>
+    </View>
   );
 }

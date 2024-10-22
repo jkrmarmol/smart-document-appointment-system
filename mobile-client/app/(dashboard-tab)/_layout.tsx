@@ -45,12 +45,6 @@ export default function DashboardTab() {
             ) : (
               <DocumentInActive height={36} width={36} opacity={0.4} />
             );
-          if (route.name === "transaction")
-            return focused ? (
-              <TransactionActive height={36} width={36} />
-            ) : (
-              <TransactionInActive height={36} width={36} opacity={0.4} />
-            );
           if (route.name === "profile")
             return focused ? (
               <ProfileActive height={36} width={36} />
@@ -91,7 +85,6 @@ export default function DashboardTab() {
           },
         }}
       />
-      <Tabs.Screen name="transaction" />
       <Tabs.Screen name="profile" />
     </Tabs>
   );
