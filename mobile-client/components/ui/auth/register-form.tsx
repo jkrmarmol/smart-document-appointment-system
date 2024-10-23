@@ -3,8 +3,58 @@ import React from "react";
 import Button from "../button";
 import { moderateScale } from "react-native-size-matters";
 import { router } from "expo-router";
+import { toast } from "sonner-native";
+import { usePostRegisterMutation } from "@/redux/auth/authApiSlice";
+import { useAppDispatch, useAppSelector } from "@/hooks/useTypedSelector";
+import {
+  setRegisterInputConfirmPassword,
+  setRegisterInputEmail,
+  setRegisterInputPassword,
+} from "@/redux/auth/registerSlice";
 
 export default function RegisterForm() {
+  const dispatch = useAppDispatch();
+  const selectRegisterForm = useAppSelector((state) => state.registerReducer.input);
+  const [postRegister] = usePostRegisterMutation();
+  const onClickRegister = async () => {
+    try {
+      if (selectRegisterForm.password !== selectRegisterForm.confirmPassword) {
+        return toast.error("Password does not match.", {
+          description: "Please make sure that your password match.",
+        });
+      }
+      const { data, status } = await postRegister({
+        email: selectRegisterForm.email,
+        password: selectRegisterForm.password,
+      }).unwrap();
+      console.log({ data, status });
+      if (status === 400 && Array.isArray(data.message)) {
+        return toast.error("An error occurred. Please try again later.", {
+          description: data.message.join(", "),
+        });
+      }
+      if (status === 409 && data.message === "User Already Exists") {
+        return toast.error("User Already Exists", {
+          description: "Please change email address.",
+        });
+      }
+      if (status === 201 && data.id) {
+        toast.success("Successfully registered.", {
+          description: "You can now login.",
+        });
+        return router.push("/(authentication-tab)/login");
+      }
+      return toast.error("An error occurred. Please try again later.", {
+        description: "Please try again later.",
+      });
+    } catch (err) {
+      if (err instanceof Error) {
+        return toast.error("An error occurred. Please try again later.", {
+          description: err.message,
+        });
+      }
+    }
+  };
   return (
     <View
       style={{
@@ -36,9 +86,10 @@ export default function RegisterForm() {
             backgroundColor: "#0000000D",
             padding: moderateScale(10),
             borderRadius: moderateScale(8),
-            fontSize: moderateScale(15),
+            fontSize: moderateScale(13),
             fontFamily: "GGSansMedium",
           }}
+          onChangeText={(text) => dispatch(setRegisterInputEmail(text))}
         />
 
         <TextInput
@@ -49,9 +100,10 @@ export default function RegisterForm() {
             backgroundColor: "#0000000D",
             padding: moderateScale(10),
             borderRadius: moderateScale(8),
-            fontSize: moderateScale(15),
+            fontSize: moderateScale(13),
             fontFamily: "GGSansMedium",
           }}
+          onChangeText={(text) => dispatch(setRegisterInputPassword(text))}
         />
 
         <TextInput
@@ -62,9 +114,10 @@ export default function RegisterForm() {
             backgroundColor: "#0000000D",
             padding: moderateScale(10),
             borderRadius: moderateScale(8),
-            fontSize: moderateScale(15),
+            fontSize: moderateScale(13),
             fontFamily: "GGSansMedium",
           }}
+          onChangeText={(text) => dispatch(setRegisterInputConfirmPassword(text))}
         />
       </View>
 
@@ -73,7 +126,7 @@ export default function RegisterForm() {
           marginTop: moderateScale(60),
         }}
       >
-        <Button onPress={() => router.push("/(authentication-tab)/email-confirmation")}>Register</Button>
+        <Button onPress={onClickRegister}>Register</Button>
       </View>
 
       <View

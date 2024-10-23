@@ -23,7 +23,6 @@ export default function LoginForm() {
         });
       }
       const { data, status } = await postLogin(selectLoginInput).unwrap();
-      console.log({ data, status });
       if (status === 404 && data.message === "User Not Found") {
         return toast.error("User Not Found", {
           description: "User not found, please check your email and password",
@@ -48,6 +47,20 @@ export default function LoginForm() {
         });
         return router.push("/(dashboard-tab)/home");
       }
+      if (status === 401 && data.message === "Email Not Verified") {
+        toast.error("Email Not Verified", {
+          description: "Please verify your email to login",
+        });
+        return router.push({
+          pathname: "/(authentication-tab)/email-confirmation",
+          params: {
+            email: selectLoginInput.email,
+          },
+        });
+      }
+      return toast.error("An Error Occurred", {
+        description: "An error occurred while trying to login",
+      });
     } catch (err) {
       if (err instanceof Error) {
         return toast.error("Error", {

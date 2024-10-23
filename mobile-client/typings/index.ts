@@ -32,15 +32,15 @@ export interface IGetSession {
 }
 
 export interface UserInformation {
-  id: string;
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  studentNo: string;
-  specialOrder: string;
-  lrn: string;
-  address: string;
-  userId: string;
+  id?: string;
+  firstName: string | null;
+  middleName: string | null;
+  lastName: string | null;
+  studentNo: string | null;
+  specialOrder: string | null;
+  lrn: string | null;
+  address: string | null;
+  userId?: string;
 }
 
 export interface IPostEmailConfirmationResponse extends Partial<IExceptionResponse> {
@@ -51,14 +51,34 @@ export interface IPostVerifyOtpResponse extends Partial<IExceptionResponse> {}
 
 export interface IInformationRegistrationSliceInitialState {
   personalInformation: {
-    firstName: string | null;
-    middleName: string | null;
-    lastName: string | null;
-    address: string | null;
+    firstName: string;
+    middleName: string;
+    lastName: string;
+    address: string;
   };
   academicInformation: {
-    studentNo: string | null;
-    specialOrderNo: string | null;
-    lrn: string | null;
+    studentNo: string;
+    specialOrderNo: string;
+    lrn: string;
+  };
+}
+
+export interface IPostDashboardProfileResponse extends Partial<IExceptionResponse>, Partial<UserInformation> {}
+
+export interface IPostRegisterResponse extends Partial<IExceptionResponse> {
+  id: string;
+  emailVerified: boolean;
+  email: string;
+  password: string;
+  role: "STUDENT" | "ADMIN";
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface IRegisterSliceInitialState {
+  input: {
+    email: string;
+    password: string;
+    confirmPassword: string;
   };
 }

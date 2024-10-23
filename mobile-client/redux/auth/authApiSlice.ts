@@ -1,9 +1,15 @@
-import { IGetSession, IPostEmailConfirmationResponse, IPostLoginResponse, IPostVerifyOtpResponse } from "@/typings";
+import {
+  IGetSession,
+  IPostEmailConfirmationResponse,
+  IPostLoginResponse,
+  IPostRegisterResponse,
+  IPostVerifyOtpResponse,
+} from "@/typings";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import * as SecureStore from "expo-secure-store";
 
 export const authApiSlice = createApi({
-  reducerPath: "api",
+  reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.EXPO_PUBLIC_API_URL,
     validateStatus: (response, result) => {
@@ -54,8 +60,23 @@ export const authApiSlice = createApi({
         return { status: meta?.response?.status, data: response };
       },
     }),
+    postRegister: builder.mutation({
+      query: (data: { email: string; password: string }) => ({
+        url: `/api/v1/auth/sign-up`,
+        method: "POST",
+        body: data,
+      }),
+      transformResponse: (response: IPostRegisterResponse, meta) => {
+        return { status: meta?.response?.status, data: response };
+      },
+    }),
   }),
 });
 
-export const { usePostLogInMutation, useGetSessionQuery, usePostEmailConfirmationMutation, usePostVerifyOtpMutation } =
-  authApiSlice;
+export const {
+  usePostLogInMutation,
+  useGetSessionQuery,
+  usePostEmailConfirmationMutation,
+  usePostVerifyOtpMutation,
+  usePostRegisterMutation,
+} = authApiSlice;

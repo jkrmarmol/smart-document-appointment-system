@@ -1,15 +1,6 @@
 // @ts-ignore
 import { ProgressStep, ProgressSteps } from "react-native-progress-steps";
-import {
-  View,
-  Text,
-  SafeAreaView,
-  ScrollView,
-  useWindowDimensions,
-  ScrollViewProps,
-  StyleSheet,
-  TextInput,
-} from "react-native";
+import { View, SafeAreaView, useWindowDimensions, ScrollViewProps, StyleSheet } from "react-native";
 import React from "react";
 import { moderateScale } from "react-native-size-matters";
 import { LinearGradient } from "expo-linear-gradient";
@@ -17,9 +8,14 @@ import PersonalInformation from "@/components/authentication/personal-informatio
 import AcademicInformation from "@/components/authentication/academic-information";
 import VerifyInformation from "@/components/authentication/verify-information";
 import { router } from "expo-router";
+import { toast } from "sonner-native";
+import { usePostDashboardProfileMutation } from "@/redux/dashboardApiSlice";
+import { useAppSelector } from "@/hooks/useTypedSelector";
 
 export default function InformationRegistration() {
   const { width } = useWindowDimensions();
+  const { personalInformation, academicInformation } = useAppSelector((state) => state.informationRegistrationReducer);
+  const [postDashboardProfile] = usePostDashboardProfileMutation();
 
   const defaultScrollViewProps: ScrollViewProps = {
     keyboardShouldPersistTaps: "handled",
@@ -42,7 +38,31 @@ export default function InformationRegistration() {
   };
 
   const onSubmitSteps = async () => {
-    return router.push("/(dashboard-tab)/home");
+    try {
+      const informationData = {
+        firstName: personalInformation.firstName,
+        middleName: personalInformation.middleName,
+        lastName: personalInformation.lastName,
+        studentNo: academicInformation.studentNo,
+        specialOrder: academicInformation.specialOrderNo,
+        lrn: academicInformation.lrn,
+        address: personalInformation.address,
+      };
+      const { data, status } = await postDashboardProfile(informationData).unwrap();
+      if (status === 201 && data.id) {
+        toast.success("Information successfully submitted.", {
+          description: "You are now redirecting to dashboard...",
+        });
+        return router.push("/(dashboard-tab)/home");
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        console.log(err);
+        return toast.error("An error occurred. Please try again later.", {
+          description: "Error: " + err.message,
+        });
+      }
+    }
   };
 
   return (

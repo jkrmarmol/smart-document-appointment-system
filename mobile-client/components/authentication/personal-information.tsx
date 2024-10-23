@@ -1,5 +1,4 @@
 import { View, Text, TextInput, ScrollView } from "react-native";
-import React from "react";
 import { moderateScale } from "react-native-size-matters";
 import { useAppDispatch, useAppSelector } from "@/hooks/useTypedSelector";
 import {

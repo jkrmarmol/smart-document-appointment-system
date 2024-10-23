@@ -4,9 +4,18 @@ import { Image } from "expo-image";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback } from "react";
 import { setStatusBarStyle } from "expo-status-bar";
+import * as SecureStore from "expo-secure-store";
+import { useGetSessionQuery } from "@/redux/auth/authApiSlice";
 
 export default function Profile() {
   const { width } = useWindowDimensions();
+  const { refetch: refetchGetSession } = useGetSessionQuery({});
+
+  const onClickLogout = async () => {
+    await SecureStore.deleteItemAsync("token");
+    await refetchGetSession();
+    return router.push("/(authentication-tab)/");
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -57,7 +66,7 @@ export default function Profile() {
         </View>
       </View>
       <TouchableOpacity
-        onPress={() => router.push("/(authentication-tab)/")}
+        onPress={onClickLogout}
         style={{
           backgroundColor: "#0000000D",
           height: moderateScale(50),

@@ -1,11 +1,11 @@
 import { View, Text, StyleSheet } from "react-native";
-import React from "react";
 import { moderateScale } from "react-native-size-matters";
 import { useAppSelector } from "@/hooks/useTypedSelector";
 import { notApplicable } from "@/utils/index";
 
 export default function VerifyInformation() {
   const { academicInformation, personalInformation } = useAppSelector((state) => state.informationRegistrationReducer);
+
   return (
     <View
       style={{
