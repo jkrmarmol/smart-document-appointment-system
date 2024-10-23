@@ -19,14 +19,15 @@ enum Role {
 }
 
 model Users {
-  id              String           @id @default(uuid())
-  emailVerified   Boolean          @default(false)
-  email           String           @unique
-  password        String
-  role            Role             @default(STUDENT)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  UserInformation UserInformation?
+  id               String             @id @default(uuid())
+  emailVerified    Boolean            @default(false)
+  email            String             @unique
+  password         String
+  role             Role               @default(STUDENT)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  UserInformation  UserInformation?
+  DocumentSelected DocumentSelected[]
 }
 
 model UserInformation {
@@ -66,13 +67,13 @@ model DeliveryOptions {
 }
 
 model PaymentOptions {
-  id               String             @id @default(uuid())
-  name             String
-  isAvailable      Boolean            @default(false)
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  DocumentPayment  DocumentPayment[]
-  RequestDocuments RequestDocuments[]
+  id              String            @id @default(uuid())
+  name            String
+  isAvailable     Boolean           @default(false)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  DocumentPayment DocumentPayment[]
+  // RequestDocuments RequestDocuments[]
 }
 
 enum PaymentStatus {
@@ -82,12 +83,13 @@ enum PaymentStatus {
 }
 
 model DocumentPayment {
-  id               String          @id @default(uuid())
-  paymentOptionId  PaymentOptions? @relation(fields: [paymentOptionsId], references: [id])
+  id               String             @id @default(uuid())
+  paymentOptionId  PaymentOptions?    @relation(fields: [paymentOptionsId], references: [id])
   paymentOptionsId String?
-  status           PaymentStatus   @default(PENDING)
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
+  status           PaymentStatus      @default(PENDING)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  RequestDocuments RequestDocuments[]
 }
 
 enum RequestDocumentsStatus {
@@ -99,17 +101,17 @@ enum RequestDocumentsStatus {
 }
 
 model RequestDocuments {
-  id                 String                 @id @default(uuid())
-  documentSelected   DocumentSelected       @relation(fields: [documentSelectedId], references: [id])
-  documentSelectedId String
-  selectedSchedule   DateTime
-  deliverOptions     DeliveryOptions?       @relation(fields: [deliveryOptionsId], references: [id])
-  deliveryOptionsId  String?
-  paymentOptions     PaymentOptions?        @relation(fields: [paymentOptionsId], references: [id])
-  paymentOptionsId   String?
-  status             RequestDocumentsStatus @default(PENDING)
-  createdAt          DateTime               @default(now())
-  updatedAt          DateTime               @updatedAt
+  id                String                 @id @default(uuid())
+  selectedSchedule  DateTime
+  deliverOptions    DeliveryOptions?       @relation(fields: [deliveryOptionsId], references: [id])
+  deliveryOptionsId String?
+  documentPayment   DocumentPayment        @relation(fields: [documentPaymentId], references: [id])
+  documentPaymentId String
+  status            RequestDocumentsStatus @default(PENDING)
+  address           String?
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+  DocumentSelected  DocumentSelected[]
 }
 
 enum EligibilityStatus {
@@ -119,10 +121,13 @@ enum EligibilityStatus {
 }
 
 model DocumentSelected {
-  id               String             @id @default(uuid())
-  document         Documents          @relation(fields: [documentId], references: [id])
-  documentId       String
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  RequestDocuments RequestDocuments[]
+  id                 String           @id @default(uuid())
+  document           Documents        @relation(fields: [documentId], references: [id])
+  documentId         String
+  user               Users            @relation(fields: [userId], references: [id])
+  userId             String
+  requestDocument    RequestDocuments @relation(fields: [requestDocumentsId], references: [id])
+  requestDocumentsId String
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
 }

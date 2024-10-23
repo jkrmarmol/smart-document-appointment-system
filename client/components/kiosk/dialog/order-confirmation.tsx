@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
 import { cleanUpOrder } from '@/store/kiosk/orderSlice';
 import { useAppDispatch } from '@/hooks/redux';
+import { fetchOrderDocument } from '@/server/kiosk';
 
 const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '900'],
@@ -34,79 +35,97 @@ export default function OrderConfirmation(props: { open: boolean; onClose: () =>
     setSelectedIndex((prevIndex) => prevIndex - 1);
   };
 
-  const onClickConfirm = () => {
-    props.onClose();
-    Swal.fire({
-      title: 'Confirm Payment',
-      text: 'How would you like to proceed?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Pay Now',
-      cancelButtonText: 'Pay Later',
-      customClass: {
-        container: `${poppins.className}`,
-        confirmButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-normal`,
-        cancelButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-normal`,
-        title: `${poppins.className}`,
-        validationMessage: `${poppins.className}`
-      }
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // Handle Pay Now
-        Swal.fire({
-          title: 'Please wait...',
-          text: 'Redirecting to Payment Gateway...',
-          icon: 'info',
-          confirmButtonText: 'OK',
-          customClass: {
-            container: `${poppins.className}`,
-            title: `${poppins.className}`,
-            confirmButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-normal`
-          }
-        }).then((result) => {
-          if (result.isConfirmed) {
-            dispatch(cleanUpOrder());
-            router.push('/kiosk');
-            Swal.fire({
-              title: 'Thank your for using our service!',
-              icon: 'success',
-              customClass: {
-                container: `${poppins.className}`,
-                title: `${poppins.className}`,
-                confirmButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-normal`
-              }
-            });
-          }
-        });
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        // Handle Pay Later
-        Swal.fire({
-          title: 'Pay Later',
-          text: 'Payment Link has been sent to your email and is also available in the mobile application. You have 24 hours to complete the payment.',
-          icon: 'info',
-          confirmButtonText: 'OK',
-          customClass: {
-            container: `${poppins.className}`,
-            title: `${poppins.className}`,
-            confirmButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-normal`
-          }
-        }).then((result) => {
-          if (result.isConfirmed) {
-            dispatch(cleanUpOrder());
-            router.push('/kiosk');
-            Swal.fire({
-              title: 'Thank your for using our service!',
-              icon: 'success',
-              customClass: {
-                container: `${poppins.className}`,
-                title: `${poppins.className}`,
-                confirmButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-normal`
-              }
-            });
-          }
-        });
-      }
+  const onClickConfirm = async () => {
+    // props.onClose();
+    // Swal.fire({
+    //   title: 'Confirm Payment',
+    //   text: 'How would you like to proceed?',
+    //   icon: 'question',
+    //   showCancelButton: true,
+    //   confirmButtonText: 'Pay Now',
+    //   cancelButtonText: 'Pay Later',
+    //   customClass: {
+    //     container: `${poppins.className}`,
+    //     confirmButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-normal`,
+    //     cancelButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-normal`,
+    //     title: `${poppins.className}`,
+    //     validationMessage: `${poppins.className}`
+    //   }
+    // }).then((result) => {
+    //   if (result.isConfirmed) {
+    //     // Handle Pay Now
+    //     Swal.fire({
+    //       title: 'Please wait...',
+    //       text: 'Redirecting to Payment Gateway...',
+    //       icon: 'info',
+    //       confirmButtonText: 'OK',
+    //       customClass: {
+    //         container: `${poppins.className}`,
+    //         title: `${poppins.className}`,
+    //         confirmButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-normal`
+    //       }
+    //     }).then((result) => {
+    //       if (result.isConfirmed) {
+    //         dispatch(cleanUpOrder());
+    //         router.push('/kiosk');
+    //         Swal.fire({
+    //           title: 'Thank your for using our service!',
+    //           icon: 'success',
+    //           customClass: {
+    //             container: `${poppins.className}`,
+    //             title: `${poppins.className}`,
+    //             confirmButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-normal`
+    //           }
+    //         });
+    //       }
+    //     });
+    //   } else if (result.dismiss === Swal.DismissReason.cancel) {
+    //     // Handle Pay Later
+    //     Swal.fire({
+    //       title: 'Pay Later',
+    //       text: 'Payment Link has been sent to your email and is also available in the mobile application. You have 24 hours to complete the payment.',
+    //       icon: 'info',
+    //       confirmButtonText: 'OK',
+    //       customClass: {
+    //         container: `${poppins.className}`,
+    //         title: `${poppins.className}`,
+    //         confirmButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-normal`
+    //       }
+    //     }).then((result) => {
+    //       if (result.isConfirmed) {
+    //         dispatch(cleanUpOrder());
+    //         router.push('/kiosk');
+    //         Swal.fire({
+    //           title: 'Thank your for using our service!',
+    //           icon: 'success',
+    //           customClass: {
+    //             container: `${poppins.className}`,
+    //             title: `${poppins.className}`,
+    //             confirmButton: ` bg-blue-600 text-white hover:bg-blue-700 ${poppins.className} rounded-lg p-3 font-normal`
+    //           }
+    //         });
+    //       }
+    //     });
+    //   }
+    // });
+    console.log('test');
+    const response = await fetchOrderDocument({
+      documentSelected: [
+        {
+          documentId: '5b8cd4b8-ee37-4461-9a90-6b344f8b94ff',
+          userId: 'f7558c22-02fd-4068-acf8-a0d0f86f1760'
+        },
+        {
+          documentId: '10903776-fac2-440f-963a-060151000c22',
+          userId: 'f7558c22-02fd-4068-acf8-a0d0f86f1760'
+        }
+      ],
+      selectedSchedule: '2022-10-10T10:00:00.000Z',
+      deliveryOptionsId: '2c6c088a-30d2-4146-9459-8cedde9bb4be',
+      paymentOptionsId: '60ed65f3-a45c-42ad-80a4-26eca8b546f7',
+      address: 'Ipil-Ipil St., Brgy. San Jose, Antipolo City'
     });
+    console.log(response);
   };
 
   const tabs = ['Your Order', 'Shipping Options', 'Address', 'Schedule', 'Payment Methods'];

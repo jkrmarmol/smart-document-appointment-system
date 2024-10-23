@@ -1,4 +1,5 @@
 'use server';
+import { IOrderDocument } from '@/types';
 import { prisma } from './prisma';
 
 export async function fetchStudentNumber(studentNo: string) {
@@ -37,4 +38,34 @@ export async function fetchAllPaymentMethods() {
   });
 }
 
-export async function fetchOrderDocument() {}
+export async function fetchOrderDocument(data: IOrderDocument) {
+  try {
+    const orderDocument = data.documentSelected.map((document) => document);
+    const documentPayment = await prisma.documentPayment.create({
+      data: {
+        paymentOptionsId: data.paymentOptionsId
+      }
+    });
+    const createdRequest = await prisma.requestDocuments.create({
+      data: {
+        selectedSchedule: data.selectedSchedule,
+        deliveryOptionsId: data.deliveryOptionsId,
+        documentPaymentId: documentPayment.id,
+        address: data.address
+      }
+    });
+    const createdDocumentSelected = await prisma.documentSelected.createMany({
+      data: orderDocument.map((document) => ({
+        ...document,
+        userId: data.documentSelected[0].userId,
+        requestDocumentsId: createdRequest.id
+      }))
+    });
+    console.log(createdDocumentSelected);
+    return createdDocumentSelected;
+  } catch (err) {
+    if (err instanceof Error) {
+      console.log(err);
+    }
+  }
+}

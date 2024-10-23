@@ -58,3 +58,14 @@ export interface OrderSliceInitialState {
 export interface DocumentItemProps extends MenuItem {
   isSelected: boolean;
 }
+
+export interface IOrderDocument {
+  documentSelected: Array<{
+    documentId: string;
+    userId: string;
+  }>;
+  selectedSchedule: string;
+  deliveryOptionsId: string;
+  paymentOptionsId: string;
+  address?: string;
+}
