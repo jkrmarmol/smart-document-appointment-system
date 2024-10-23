@@ -49,6 +49,7 @@ export default function DocumentsForm(data: Partial<Document>) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsLoading(true);
+      console.log(values);
       const response = await createDocument({
         ...values,
         price: parseFloat(values.price.toFixed(2))

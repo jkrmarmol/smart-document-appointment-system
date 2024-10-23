@@ -53,7 +53,7 @@ model Documents {
   eligibility      EligibilityStatus  @default(BOTH)
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
-  RequestDocuments RequestDocuments[]
+  DocumentSelected DocumentSelected[]
 }
 
 model DeliveryOptions {
@@ -99,21 +99,30 @@ enum RequestDocumentsStatus {
 }
 
 model RequestDocuments {
-  id                String                 @id @default(uuid())
-  document          Documents              @relation(fields: [documentId], references: [id])
-  documentId        String
-  selectedSchedule  DateTime
-  deliverOptions    DeliveryOptions?       @relation(fields: [deliveryOptionsId], references: [id])
-  deliveryOptionsId String?
-  paymentOptions    PaymentOptions?        @relation(fields: [paymentOptionsId], references: [id])
-  paymentOptionsId  String?
-  status            RequestDocumentsStatus @default(PENDING)
-  createdAt         DateTime               @default(now())
-  updatedAt         DateTime               @updatedAt
+  id                 String                 @id @default(uuid())
+  documentSelected   DocumentSelected       @relation(fields: [documentSelectedId], references: [id])
+  documentSelectedId String
+  selectedSchedule   DateTime
+  deliverOptions     DeliveryOptions?       @relation(fields: [deliveryOptionsId], references: [id])
+  deliveryOptionsId  String?
+  paymentOptions     PaymentOptions?        @relation(fields: [paymentOptionsId], references: [id])
+  paymentOptionsId   String?
+  status             RequestDocumentsStatus @default(PENDING)
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
 }
 
 enum EligibilityStatus {
   STUDENT
   GRADUATED
   BOTH
+}
+
+model DocumentSelected {
+  id               String             @id @default(uuid())
+  document         Documents          @relation(fields: [documentId], references: [id])
+  documentId       String
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  RequestDocuments RequestDocuments[]
 }

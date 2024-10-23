@@ -2,9 +2,8 @@
 import { useAppDispatch } from '@/hooks/redux';
 import { formatCurrency } from '@/lib/utils';
 import { addToOrder, removeFromOrder } from '@/store/kiosk/orderSlice';
-import { DocumentItemProps, MenuItem } from '@/types';
-import { Button } from '@headlessui/react';
-import { Plus, X } from 'lucide-react';
+import { DocumentItemProps } from '@/types';
+import { X } from 'lucide-react';
 import { Poppins } from 'next/font/google';
 import React from 'react';
 
@@ -30,14 +29,8 @@ export default function DocumentItem(item: DocumentItemProps) {
         </button>
         <div className="flex h-full flex-col items-center justify-between p-4 py-10">
           <div className="text-center">
-            <h3
-              className={`font-semibold text-white ${poppins.className} text-lg font-semibold`}
-            >
-              {item.name}
-            </h3>
-            <p
-              className={`text-lg ${poppins.className} font-medium text-white opacity-70`}
-            >
+            <h3 className={`font-semibold text-white ${poppins.className} text-lg font-semibold`}>{item.name}</h3>
+            <p className={`text-lg ${poppins.className} font-medium text-white opacity-70`}>
               {formatCurrency(item.price)}
             </p>
           </div>
@@ -46,21 +39,11 @@ export default function DocumentItem(item: DocumentItemProps) {
     );
   }
   return (
-    <button
-      key={item.id}
-      className="rounded-2xl bg-gray-200"
-      onClick={() => dispatch(addToOrder(item))}
-    >
+    <button key={item.id} className="rounded-2xl bg-gray-200" onClick={() => dispatch(addToOrder(item))}>
       <div className="flex h-full flex-col items-center justify-between p-4 py-10">
         <div className="text-center">
-          <h3
-            className={`font-semibold text-black ${poppins.className} text-lg font-semibold`}
-          >
-            {item.name}
-          </h3>
-          <p className={`text-lg ${poppins.className} font-medium opacity-60`}>
-            {formatCurrency(item.price)}
-          </p>
+          <h3 className={`font-semibold text-black ${poppins.className} text-lg font-semibold`}>{item.name}</h3>
+          <p className={`text-lg ${poppins.className} font-medium opacity-60`}>{formatCurrency(item.price)}</p>
         </div>
       </div>
     </button>

@@ -19,14 +19,14 @@ enum Role {
 }
 
 model Users {
-  id                String           @id @default(uuid())
-  email             String           @unique
-  password          String
-  role              Role             @default(STUDENT)
-  userInformation   UserInformation? @relation(fields: [userInformationId], references: [id])
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
-  userInformationId String?
+  id              String           @id @default(uuid())
+  emailVerified   Boolean          @default(false)
+  email           String           @unique
+  password        String
+  role            Role             @default(STUDENT)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  UserInformation UserInformation?
 }
 
 model UserInformation {
@@ -38,15 +38,10 @@ model UserInformation {
   specialOrder String?
   lrn          String?
   address      String?
+  users        Users    @relation(fields: [userId], references: [id])
+  userId       String   @unique
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  Users        Users[]
-}
-
-enum EligibilityStatus {
-  STUDENT
-  GRADUATED
-  BOTH
 }
 
 model Documents {
@@ -58,7 +53,7 @@ model Documents {
   eligibility      EligibilityStatus  @default(BOTH)
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
-  RequestDocuments RequestDocuments[]
+  DocumentSelected DocumentSelected[]
 }
 
 model DeliveryOptions {
@@ -104,15 +99,30 @@ enum RequestDocumentsStatus {
 }
 
 model RequestDocuments {
-  id                String                 @id @default(uuid())
-  document          Documents              @relation(fields: [documentId], references: [id])
-  documentId        String
-  selectedSchedule  DateTime
-  deliverOptions    DeliveryOptions?       @relation(fields: [deliveryOptionsId], references: [id])
-  deliveryOptionsId String?
-  paymentOptions    PaymentOptions?        @relation(fields: [paymentOptionsId], references: [id])
-  paymentOptionsId  String?
-  status            RequestDocumentsStatus @default(PENDING)
-  createdAt         DateTime               @default(now())
-  updatedAt         DateTime               @updatedAt
+  id                 String                 @id @default(uuid())
+  documentSelected   DocumentSelected       @relation(fields: [documentSelectedId], references: [id])
+  documentSelectedId String
+  selectedSchedule   DateTime
+  deliverOptions     DeliveryOptions?       @relation(fields: [deliveryOptionsId], references: [id])
+  deliveryOptionsId  String?
+  paymentOptions     PaymentOptions?        @relation(fields: [paymentOptionsId], references: [id])
+  paymentOptionsId   String?
+  status             RequestDocumentsStatus @default(PENDING)
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+}
+
+enum EligibilityStatus {
+  STUDENT
+  GRADUATED
+  BOTH
+}
+
+model DocumentSelected {
+  id               String             @id @default(uuid())
+  document         Documents          @relation(fields: [documentId], references: [id])
+  documentId       String
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  RequestDocuments RequestDocuments[]
 }

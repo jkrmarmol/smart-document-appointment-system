@@ -23,9 +23,7 @@ const orderSlice = createSlice({
   initialState,
   reducers: {
     addToOrder: (state, action: PayloadAction<MenuItem>) => {
-      const itemExists = state.order.some(
-        (item) => item.id === action.payload.id
-      );
+      const itemExists = state.order.some((item) => item.id === action.payload.id);
       if (!itemExists) {
         state.order.push(action.payload);
         state.orderData.orderItem.push(action.payload);
@@ -35,9 +33,7 @@ const orderSlice = createSlice({
       state.openModalConfirmationOrder = action.payload;
     },
     removeFromOrder: (state, action: PayloadAction<string>) => {
-      const itemIndex = state.order.findIndex(
-        (item) => item.id === action.payload
-      );
+      const itemIndex = state.order.findIndex((item) => item.id === action.payload);
       if (itemIndex !== -1) {
         state.order.splice(itemIndex, 1);
         state.orderData.orderItem.splice(itemIndex, 1);

@@ -33,7 +33,8 @@ const authConfig = {
         try {
           const userData = await prisma.users.findFirst({
             where: {
-              email: credentials.email ?? ''
+              email: credentials.email ?? '',
+              role: 'ADMIN'
             }
           });
           if (!userData) return null;
