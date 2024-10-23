@@ -47,6 +47,17 @@ export default function LoginForm() {
         });
         return router.push("/(dashboard-tab)/home");
       }
+      if (status === 201 && data.accessToken && !data.emailVerified) {
+        toast.error("Email Not Verified", {
+          description: "Please verify your email to login",
+        });
+        return router.push({
+          pathname: "/(authentication-tab)/email-confirmation",
+          params: {
+            email: selectLoginInput.email,
+          },
+        });
+      }
       if (status === 401 && data.message === "Email Not Verified") {
         toast.error("Email Not Verified", {
           description: "Please verify your email to login",

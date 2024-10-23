@@ -19,7 +19,6 @@ export default function EmailConfirmation() {
   const [postVerifyOtp] = usePostVerifyOtpMutation();
 
   const onClickVerify = async () => {
-    console.log(SecureStore.getItem("otpToken"));
     try {
       const { data, status } = await postVerifyOtp({
         otp: otp,

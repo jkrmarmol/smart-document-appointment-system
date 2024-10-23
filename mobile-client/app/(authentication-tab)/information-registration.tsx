@@ -11,6 +11,7 @@ import { router } from "expo-router";
 import { toast } from "sonner-native";
 import { usePostDashboardProfileMutation } from "@/redux/dashboardApiSlice";
 import { useAppSelector } from "@/hooks/useTypedSelector";
+import * as SecureStore from "expo-secure-store";
 
 export default function InformationRegistration() {
   const { width } = useWindowDimensions();
@@ -55,9 +56,16 @@ export default function InformationRegistration() {
         });
         return router.push("/(dashboard-tab)/home");
       }
+      if (status === 401 && data.message === "Unauthorized") {
+        return toast.error("Unauthorized access. Please login again.", {
+          description: "You are now redirecting to login...",
+        });
+      }
+      return toast.error("An error occurred. Please try again later.", {
+        description: "Error: " + data.message,
+      });
     } catch (err) {
       if (err instanceof Error) {
-        console.log(err);
         return toast.error("An error occurred. Please try again later.", {
           description: "Error: " + err.message,
         });

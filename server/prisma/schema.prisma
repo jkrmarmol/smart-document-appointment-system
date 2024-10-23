@@ -50,6 +50,7 @@ model Documents {
   price            Decimal            @db.Decimal(10, 2)
   dayBeforeRelease Int                @default(3)
   isAvailable      Boolean            @default(false)
+  eligibility      EligibilityStatus  @default(BOTH)
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
   RequestDocuments RequestDocuments[]
@@ -109,4 +110,10 @@ model RequestDocuments {
   status            RequestDocumentsStatus @default(PENDING)
   createdAt         DateTime               @default(now())
   updatedAt         DateTime               @updatedAt
+}
+
+enum EligibilityStatus {
+  STUDENT
+  GRADUATED
+  BOTH
 }

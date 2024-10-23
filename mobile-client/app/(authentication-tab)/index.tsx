@@ -13,16 +13,16 @@ export default function HomeScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      if (dataGetSession?.data.id && dataGetSession.data.emailVerified && dataGetSession.data.UserInformation) {
+      if (dataGetSession?.data?.id && dataGetSession?.data?.emailVerified && dataGetSession?.data?.UserInformation) {
         return router.push("/(dashboard-tab)/home");
       }
-      if (dataGetSession?.data.id && !dataGetSession.data.emailVerified) {
+      if (dataGetSession?.data?.id && !dataGetSession?.data?.emailVerified) {
         return router.push({
           pathname: "/(authentication-tab)/email-confirmation",
           params: { email: dataGetSession.data.email },
         });
       }
-      if (dataGetSession?.data.id && dataGetSession.data.emailVerified && !dataGetSession.data.UserInformation) {
+      if (dataGetSession?.data?.id && dataGetSession?.data?.emailVerified && !dataGetSession?.data?.UserInformation) {
         return router.push("/(authentication-tab)/information-registration");
       }
     }, [statusGetSession])

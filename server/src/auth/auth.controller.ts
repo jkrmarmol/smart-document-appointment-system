@@ -61,4 +61,9 @@ export class AuthController {
   verifyOTP(@Body() data: VerifyOtpDto) {
     return this.authService.verifyOTP(data);
   }
+
+  @Get('session')
+  authenticated(@Req() { user }: { user: UserAuth }) {
+    return this.authService.session(user);
+  }
 }

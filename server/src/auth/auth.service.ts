@@ -17,6 +17,7 @@ import { MailService } from 'src/mail/mail.service';
 import * as OTPAuth from 'otpauth';
 import { VerifyEmailDto } from './dto/verify-email.dto';
 import { VerifyOtpDto } from './dto/verify-otp.dto';
+import { UserAuth } from 'typings';
 
 let totp = new OTPAuth.TOTP({
   issuer: 'ACME',
@@ -65,9 +66,17 @@ export class AuthService {
     const decryptPass = await compare(data.password, user.password);
     if (!decryptPass)
       throw new UnauthorizedException('Invalid User Credentials');
-    if (!user.emailVerified)
-      throw new UnauthorizedException('Email Not Verified');
     const payload = { sub: user.id, email: user.email, role: user.role };
+    if (!user.emailVerified) {
+      return {
+        accessToken: await this.jwtService.signAsync(payload),
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        emailVerified: user.emailVerified,
+      };
+    }
+
     return {
       accessToken: await this.jwtService.signAsync(payload),
       id: user.id,
@@ -149,5 +158,21 @@ export class AuthService {
       },
       HttpStatus.OK,
     );
+  }
+
+  async session(user: UserAuth) {
+    const checkExists = await this.prismaService.users.findFirst({
+      where: { id: user.sub },
+      select: {
+        id: true,
+        emailVerified: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+        UserInformation: true,
+      },
+    });
+    return checkExists;
   }
 }

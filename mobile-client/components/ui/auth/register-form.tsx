@@ -27,7 +27,6 @@ export default function RegisterForm() {
         email: selectRegisterForm.email,
         password: selectRegisterForm.password,
       }).unwrap();
-      console.log({ data, status });
       if (status === 400 && Array.isArray(data.message)) {
         return toast.error("An error occurred. Please try again later.", {
           description: data.message.join(", "),
