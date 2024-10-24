@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import Calendar from 'react-calendar';
 import '@/public/styles/Calender.css';
 import { Poppins } from 'next/font/google';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux';
+import { setOrderDataSchedule } from '@/store/kiosk/orderSlice';
 
 const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '900'],
@@ -9,12 +11,9 @@ const poppins = Poppins({
 });
 
 export default function Schedule() {
-  const [value, setValue] = useState<Date | null>(new Date());
-  const disabledDates = [
-    new Date(2024, 9, 10),
-    new Date(2024, 9, 20),
-    new Date(2024, 9, 3)
-  ];
+  const dispatch = useAppDispatch();
+  const selectOrderDataSchedule = useAppSelector((state) => state.kioskOrder.orderData.schedule);
+  const disabledDates = [new Date(2024, 9, 10), new Date(2024, 9, 20), new Date(2024, 9, 3)];
 
   const isDisabledDate = (date: Date) => {
     return disabledDates.some(
@@ -30,24 +29,19 @@ export default function Schedule() {
     return day === 0;
   };
 
-  console.log(value);
   return (
     <>
       <div className="mb-12 mt-4">
         <h3 className="text-lg font-semibold">Shipping Options</h3>
-        <p
-          className={`mb-4 text-sm text-black/30 ${poppins.className} font-medium`}
-        >
+        <p className={`mb-4 text-sm text-black/30 ${poppins.className} font-medium`}>
           Please verify your order before you proceed
         </p>
       </div>
       <div className="h-[50vh] space-y-2 overflow-y-auto overflow-x-hidden p-5">
         <Calendar
-          onChange={(e) => setValue(e as any)}
-          value={value}
-          tileDisabled={({ date, view }) =>
-            (view === 'month' && isDisabledDate(date)) || isWeekend(date)
-          }
+          onChange={(e) => dispatch(setOrderDataSchedule(e as any))}
+          value={selectOrderDataSchedule}
+          tileDisabled={({ date, view }) => (view === 'month' && isDisabledDate(date)) || isWeekend(date)}
         />
       </div>
     </>

@@ -109,6 +109,9 @@ model RequestDocuments {
   documentPaymentId String
   status            RequestDocumentsStatus @default(PENDING)
   address           String?
+  additionalAddress String?
+  longitude         String?
+  latitude          String?
   createdAt         DateTime               @default(now())
   updatedAt         DateTime               @updatedAt
   DocumentSelected  DocumentSelected[]

@@ -40,7 +40,16 @@ export async function fetchAllPaymentMethods() {
 
 export async function fetchOrderDocument(data: IOrderDocument) {
   try {
-    const orderDocument = data.documentSelected.map((document) => document);
+    const findUser = await prisma.userInformation.findFirst({
+      where: {
+        studentNo: {
+          equals: data.studentNo,
+          mode: 'insensitive'
+        }
+      }
+    });
+    if (!findUser) throw new Error('User not found');
+    const orderDocument = data.documentSelected.map((document) => ({ documentId: document, userId: findUser?.userId }));
     const documentPayment = await prisma.documentPayment.create({
       data: {
         paymentOptionsId: data.paymentOptionsId
@@ -57,7 +66,7 @@ export async function fetchOrderDocument(data: IOrderDocument) {
     const createdDocumentSelected = await prisma.documentSelected.createMany({
       data: orderDocument.map((document) => ({
         ...document,
-        userId: data.documentSelected[0].userId,
+        userId: findUser.userId,
         requestDocumentsId: createdRequest.id
       }))
     });

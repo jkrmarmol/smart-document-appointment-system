@@ -99,6 +99,7 @@ export default function Component() {
             <button
               onClick={() => {
                 dispatch(cleanUpOrder());
+                localStorage.removeItem('studentNumber');
                 return router.push('/kiosk');
               }}
               className={`w-full bg-gray-300 text-black hover:bg-gray-500 ${poppins.className} rounded-xl p-3 font-semibold`}

@@ -3,6 +3,8 @@ import { Poppins } from 'next/font/google';
 import { PhilippinePeso } from 'lucide-react';
 import { PaymentOptions } from '@prisma/client';
 import { fetchAllPaymentMethods } from '@/server/kiosk';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux';
+import { setOrderDataPaymentMethod } from '@/store/kiosk/orderSlice';
 
 const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '900'],
@@ -11,10 +13,11 @@ const poppins = Poppins({
 
 export default function PaymentMethod() {
   const [paymentOptions, setPaymentOptions] = useState<Array<PaymentOptions>>([]);
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
+  const selectOrderDataPaymentOptions = useAppSelector((state) => state.kioskOrder.orderData.paymentMethod);
 
   const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedOption(event.target.value);
+    dispatch(setOrderDataPaymentMethod(event.target.value));
   };
 
   useEffect(() => {
@@ -34,14 +37,16 @@ export default function PaymentMethod() {
           <label
             key={item.id}
             className={`relative flex cursor-pointer flex-row items-center rounded-lg px-10 py-6 ${
-              item.id === selectedOption ? 'border border-blue-500 bg-blue-100' : 'border border-black/5 bg-white'
+              item.id === selectOrderDataPaymentOptions
+                ? 'border border-blue-500 bg-blue-100'
+                : 'border border-black/5 bg-white'
             }`}
           >
             <input
               type="radio"
               name="shippingOption"
               value={item.id}
-              checked={selectedOption === item.id}
+              checked={selectOrderDataPaymentOptions === item.id}
               onChange={handleOptionChange}
               className="hidden"
             />

@@ -50,7 +50,7 @@ export interface OrderSliceInitialState {
       latitude: number;
       additionalAddress: string;
     };
-    schedule: Date;
+    schedule: Date | null;
     paymentMethod: string;
   };
 }
@@ -60,10 +60,8 @@ export interface DocumentItemProps extends MenuItem {
 }
 
 export interface IOrderDocument {
-  documentSelected: Array<{
-    documentId: string;
-    userId: string;
-  }>;
+  documentSelected: Array<string>;
+  studentNo: string;
   selectedSchedule: string;
   deliveryOptionsId: string;
   paymentOptionsId: string;

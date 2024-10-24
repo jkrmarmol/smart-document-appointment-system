@@ -79,12 +79,10 @@ export const fakeUsers = {
         first_name: faker.person.firstName(),
         last_name: faker.person.lastName(),
         email: `${faker.internet.email()}`,
-        phone: `001-${Math.floor(Math.random() * 900) + 100}-${
-          Math.floor(Math.random() * 900) + 100
-        }-${Math.floor(Math.random() * 10000)}`,
-        street: `${Math.floor(
-          Math.random() * 1000
-        )} ${faker.location.street()}`,
+        phone: `001-${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 900) + 100}-${Math.floor(
+          Math.random() * 10000
+        )}`,
+        street: `${Math.floor(Math.random() * 1000)} ${faker.location.street()}`,
         city: faker.helpers.arrayElement(cities),
         state: faker.helpers.arrayElement(states),
         country: 'USA',
@@ -92,10 +90,7 @@ export const fakeUsers = {
         longitude: faker.location.longitude(),
         latitude: faker.location.latitude(),
         gender: faker.helpers.arrayElement(genders) as Gender,
-        date_of_birth: faker.date
-          .between({ from: '1980-01-01', to: '2000-01-01' })
-          .toISOString()
-          .split('T')[0],
+        date_of_birth: faker.date.between({ from: '1980-01-01', to: '2000-01-01' }).toISOString().split('T')[0],
         job: faker.helpers.arrayElement(jobs),
         profile_picture: `https://api.slingacademy.com/public/sample-users/${id}.png`
       };
@@ -110,13 +105,7 @@ export const fakeUsers = {
   },
 
   // Get all users with optional gender filtering and search
-  async getAll({
-    genders = [],
-    search
-  }: {
-    genders?: string[];
-    search?: string;
-  }) {
+  async getAll({ genders = [], search }: { genders?: string[]; search?: string }) {
     let users = [...this.records];
 
     // Filter users based on selected genders
@@ -127,16 +116,7 @@ export const fakeUsers = {
     // Search functionality across multiple fields
     if (search) {
       users = matchSorter(users, search, {
-        keys: [
-          'first_name',
-          'last_name',
-          'email',
-          'job',
-          'city',
-          'street',
-          'state',
-          'country'
-        ]
+        keys: ['first_name', 'last_name', 'email', 'job', 'city', 'street', 'state', 'country']
       });
     }
 
@@ -156,7 +136,6 @@ export const fakeUsers = {
     search?: string;
   }) {
     const gendersArray = genders ? genders.split('.') : [];
-    console.log('gendersArray', gendersArray);
     const allUsers = await this.getAll({ genders: gendersArray, search });
     const totalUsers = allUsers.length;
 
@@ -192,15 +171,7 @@ export const fakeUsers = {
     return users;
   },
 
-  async getDocument({
-    page = 1,
-    limit = 10,
-    search
-  }: {
-    page?: number;
-    limit?: number;
-    search?: string;
-  }) {
+  async getDocument({ page = 1, limit = 10, search }: { page?: number; limit?: number; search?: string }) {
     const allUsers = await this.getAllDocuments({ search });
     const totalUsers = allUsers.length;
 
@@ -262,9 +233,7 @@ export const fakeProducts = {
         id,
         name: faker.commerce.productName(),
         description: faker.commerce.productDescription(),
-        created_at: faker.date
-          .between({ from: '2022-01-01', to: '2023-12-31' })
-          .toISOString(),
+        created_at: faker.date.between({ from: '2022-01-01', to: '2023-12-31' }).toISOString(),
         price: parseFloat(faker.commerce.price({ min: 5, max: 500, dec: 2 })),
         photo_url: `https://api.slingacademy.com/public/sample-products/${id}.png`,
         category: faker.helpers.arrayElement(categories),
@@ -281,20 +250,12 @@ export const fakeProducts = {
   },
 
   // Get all products with optional category filtering and search
-  async getAll({
-    categories = [],
-    search
-  }: {
-    categories?: string[];
-    search?: string;
-  }) {
+  async getAll({ categories = [], search }: { categories?: string[]; search?: string }) {
     let products = [...this.records];
 
     // Filter products based on selected categories
     if (categories.length > 0) {
-      products = products.filter((product) =>
-        categories.includes(product.category)
-      );
+      products = products.filter((product) => categories.includes(product.category));
     }
 
     // Search functionality across multiple fields

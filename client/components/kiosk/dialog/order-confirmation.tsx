@@ -10,7 +10,7 @@ import PaymentMethod from '../order-confirmation/payment-method';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
 import { cleanUpOrder } from '@/store/kiosk/orderSlice';
-import { useAppDispatch } from '@/hooks/redux';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import { fetchOrderDocument } from '@/server/kiosk';
 
 const poppins = Poppins({
@@ -25,6 +25,7 @@ function classNames(...classes: string[]) {
 export default function OrderConfirmation(props: { open: boolean; onClose: () => void }) {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const selectedDocuments = useAppSelector((state) => state.kioskOrder.orderData);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const handleNextClick = () => {
@@ -36,6 +37,14 @@ export default function OrderConfirmation(props: { open: boolean; onClose: () =>
   };
 
   const onClickConfirm = async () => {
+    const data = {
+      documentSelected: selectedDocuments.orderItem.map((item) => item.id),
+      studentNo: localStorage.getItem('studentNumber'),
+      selectedSchedule: selectedDocuments.schedule,
+      deliveryOptionsId: selectedDocuments.shippingOptions,
+      paymentOptionsId: selectedDocuments.paymentMethod
+    };
+    console.log(data);
     // props.onClose();
     // Swal.fire({
     //   title: 'Confirm Payment',
@@ -108,24 +117,18 @@ export default function OrderConfirmation(props: { open: boolean; onClose: () =>
     //     });
     //   }
     // });
-    console.log('test');
-    const response = await fetchOrderDocument({
-      documentSelected: [
-        {
-          documentId: '5b8cd4b8-ee37-4461-9a90-6b344f8b94ff',
-          userId: 'f7558c22-02fd-4068-acf8-a0d0f86f1760'
-        },
-        {
-          documentId: '10903776-fac2-440f-963a-060151000c22',
-          userId: 'f7558c22-02fd-4068-acf8-a0d0f86f1760'
-        }
-      ],
-      selectedSchedule: '2022-10-10T10:00:00.000Z',
-      deliveryOptionsId: '2c6c088a-30d2-4146-9459-8cedde9bb4be',
-      paymentOptionsId: '60ed65f3-a45c-42ad-80a4-26eca8b546f7',
-      address: 'Ipil-Ipil St., Brgy. San Jose, Antipolo City'
-    });
-    console.log(response);
+    // const studentNo = localStorage.getItem('studentNumber');
+    // if (studentNo) {
+    //   const response = await fetchOrderDocument({
+    //     documentSelected: ['5b8cd4b8-ee37-4461-9a90-6b344f8b94ff', '10903776-fac2-440f-963a-060151000c22'],
+    //     studentNo,
+    //     selectedSchedule: '2022-10-10T10:00:00.000Z',
+    //     deliveryOptionsId: '2c6c088a-30d2-4146-9459-8cedde9bb4be',
+    //     paymentOptionsId: '60ed65f3-a45c-42ad-80a4-26eca8b546f7',
+    //     address: 'Ipil-Ipil St., Brgy. San Jose, Antipolo City'
+    //   });
+    //   console.log(response);
+    // }
   };
 
   const tabs = ['Your Order', 'Shipping Options', 'Address', 'Schedule', 'Payment Methods'];

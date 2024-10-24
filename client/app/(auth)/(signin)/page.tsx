@@ -8,7 +8,6 @@ export const metadata: Metadata = {
 };
 
 (async () => {
-  console.log('test');
   const checkExist = await prisma.users.findFirst({
     where: { role: 'ADMIN' }
   });

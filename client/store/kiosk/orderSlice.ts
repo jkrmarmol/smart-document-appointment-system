@@ -45,15 +45,7 @@ const orderSlice = createSlice({
     setOrderDataShippingOptions: (state, action: PayloadAction<string>) => {
       state.orderData.shippingOptions = action.payload;
     },
-    setOrderDataAddress: (
-      state,
-      action: PayloadAction<{
-        googleMapAddress: '';
-        longitude: 0;
-        latitude: 0;
-        additionalAddress: '';
-      }>
-    ) => {
+    setOrderDataAddress: (state, action: PayloadAction<OrderSliceInitialState['orderData']['address']>) => {
       state.orderData.address = action.payload;
     },
     setOrderDataSchedule: (state, action: PayloadAction<Date>) => {

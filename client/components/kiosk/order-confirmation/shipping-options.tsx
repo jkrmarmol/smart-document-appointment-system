@@ -1,4 +1,6 @@
+import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import { fetchAllDeliveryMethods } from '@/server/kiosk';
+import { setOrderDataShippingOptions } from '@/store/kiosk/orderSlice';
 import { DeliveryOptions } from '@prisma/client';
 import { Package } from 'lucide-react';
 import { Poppins } from 'next/font/google';
@@ -11,10 +13,11 @@ const poppins = Poppins({
 
 export default function ShippingOptions() {
   const [deliveryOptions, setDeliveryOptions] = useState<Array<DeliveryOptions>>([]);
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
+  const selectOrderDataDeliveryOptions = useAppSelector((state) => state.kioskOrder.orderData.shippingOptions);
 
   const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedOption(event.target.value);
+    dispatch(setOrderDataShippingOptions(event.target.value));
   };
 
   useEffect(() => {
@@ -35,14 +38,16 @@ export default function ShippingOptions() {
           <label
             key={item.id}
             className={`relative flex cursor-pointer flex-row items-center rounded-lg px-10 py-6 ${
-              item.id === selectedOption ? 'border border-blue-500 bg-blue-100' : 'border border-black/5 bg-white'
+              item.id === selectOrderDataDeliveryOptions
+                ? 'border border-blue-500 bg-blue-100'
+                : 'border border-black/5 bg-white'
             }`}
           >
             <input
               type="radio"
               name="shippingOption"
               value={item.id}
-              checked={selectedOption === item.id}
+              checked={selectOrderDataDeliveryOptions === item.id}
               onChange={handleOptionChange}
               className="hidden"
             />

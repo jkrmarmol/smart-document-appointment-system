@@ -1,7 +1,9 @@
 'use client';
 import { Poppins } from 'next/font/google';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { useAppDispatch } from '@/hooks/redux';
+import { setOrderDataAddress } from '@/store/kiosk/orderSlice';
 
 const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '900'],
@@ -23,13 +25,12 @@ export default function Address() {
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLEMAPAPIKEY ?? '',
     version: 'beta'
   });
-
+  const dispatch = useAppDispatch();
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [marker, setMarker] = useState<google.maps.Marker | null>(null);
   const [address, setAddress] = useState<string | null>(null);
-  const [position, setPosition] = useState<{ lat: number; lng: number } | null>(
-    null
-  );
+  const [position, setPosition] = useState<{ lat: number; lng: number } | null>(null);
+  const [additionalAddress, setAdditionalAddress] = useState<string | null>(null);
 
   const onLoad = useCallback(function callback(map: google.maps.Map) {
     const bounds = new window.google.maps.LatLngBounds(center);
@@ -75,19 +76,27 @@ export default function Address() {
       });
     }
   };
-  console.log({ marker, map, address, position });
+
+  useEffect(() => {
+    if (position && address) {
+      dispatch(
+        setOrderDataAddress({
+          googleMapAddress: address,
+          longitude: position.lng,
+          latitude: position.lat,
+          additionalAddress: additionalAddress ?? ''
+        })
+      );
+    }
+  }, [map, marker, position, address, additionalAddress]);
+
+  console.log({ address, longitude: position?.lng, latitude: position?.lat, additionalAddress });
 
   return (
     <>
       <div className="mb-12 mt-4">
-        <h3 className={`text-lg font-semibold ${poppins.className}`}>
-          Address
-        </h3>
-        <p
-          className={`mb-4 text-sm text-black/30 ${poppins.className} font-medium`}
-        >
-          Please pin your address
-        </p>
+        <h3 className={`text-lg font-semibold ${poppins.className}`}>Address</h3>
+        <p className={`mb-4 text-sm text-black/30 ${poppins.className} font-medium`}>Please pin your address</p>
       </div>
       <div className="flex h-[50vh] items-start gap-5 space-y-2 overflow-y-auto overflow-x-hidden p-5">
         {isLoaded && (
@@ -103,11 +112,7 @@ export default function Address() {
 
         <div>
           <div>
-            <label
-              className={`text-sm font-medium ${poppins.className} mb-2 opacity-85`}
-            >
-              Selected Address
-            </label>
+            <label className={`text-sm font-medium ${poppins.className} mb-2 opacity-85`}>Selected Address</label>
             <input
               type="text"
               className={`w-full rounded-lg p-3 ${poppins.className} bg-black bg-opacity-[3%] text-sm font-medium text-black/70 focus:outline-none`}
@@ -115,12 +120,12 @@ export default function Address() {
             />
           </div>
           <div className="mt-4">
-            <label
-              className={`text-sm font-medium ${poppins.className} mb-2 opacity-85`}
-            >
+            <label className={`text-sm font-medium ${poppins.className} mb-2 opacity-85`}>
               Additional Address Details
             </label>
             <textarea
+              onChange={(e) => setAdditionalAddress(e.target.value)}
+              value={additionalAddress ?? ''}
               rows={6}
               className={`w-full rounded-lg p-3 ${poppins.className} bg-black bg-opacity-[3%] text-sm font-medium text-black/70 focus:outline-none`}
             ></textarea>

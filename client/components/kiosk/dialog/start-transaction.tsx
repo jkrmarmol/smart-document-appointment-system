@@ -43,6 +43,7 @@ export default function StartTransaction(props: {
         confirmButton: ` bg-blue-500 text-white hover:bg-blue-600 ${poppins.className} rounded-lg p-3 font-normal`
       }
     });
+    localStorage.setItem('studentNumber', studentNumber);
     return router.push('/kiosk/order');
   }
 
