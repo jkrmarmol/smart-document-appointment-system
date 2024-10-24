@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import Calendar from 'react-calendar';
 import '@/public/styles/Calender.css';
 import { Poppins } from 'next/font/google';
@@ -16,11 +15,14 @@ export default function Schedule() {
   const disabledDates = [new Date(2024, 9, 10), new Date(2024, 9, 20), new Date(2024, 9, 3)];
 
   const isDisabledDate = (date: Date) => {
-    return disabledDates.some(
-      (disabledDate) =>
-        date.getFullYear() === disabledDate.getFullYear() &&
-        date.getMonth() === disabledDate.getMonth() &&
-        date.getDate() === disabledDate.getDate()
+    return (
+      date < new Date() ||
+      disabledDates.some(
+        (disabledDate) =>
+          date.getFullYear() === disabledDate.getFullYear() &&
+          date.getMonth() === disabledDate.getMonth() &&
+          date.getDate() === disabledDate.getDate()
+      )
     );
   };
 

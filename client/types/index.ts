@@ -62,8 +62,11 @@ export interface DocumentItemProps extends MenuItem {
 export interface IOrderDocument {
   documentSelected: Array<string>;
   studentNo: string;
-  selectedSchedule: string;
+  selectedSchedule: Date | null;
   deliveryOptionsId: string;
   paymentOptionsId: string;
   address?: string;
+  additionalAddress?: string;
+  longitude?: string | number;
+  latitude?: string | number;
 }

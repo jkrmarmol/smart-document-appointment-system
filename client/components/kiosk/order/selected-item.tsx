@@ -21,12 +21,8 @@ export default function SelectedItem(item: MenuItem) {
         </button>
       </div>
       <div className={`mb-5 flex flex-col items-center justify-center`}>
-        <span className={`${poppins.className} text-lg font-semibold`}>
-          {item.name}
-        </span>
-        <span className={` ${poppins.className}  font-medium text-white/70`}>
-          {formatCurrency(item.price)}
-        </span>
+        <span className={`${poppins.className} text-lg font-semibold`}>{item.name}</span>
+        <span className={` ${poppins.className}  font-medium text-white/70`}>{formatCurrency(item.price)}</span>
       </div>
     </div>
   );

@@ -5,7 +5,6 @@ import { DeliveryOptions } from '@prisma/client';
 import { Package } from 'lucide-react';
 import { Poppins } from 'next/font/google';
 import React, { useEffect, useState } from 'react';
-
 const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '900'],
   subsets: ['latin']

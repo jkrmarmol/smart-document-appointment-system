@@ -90,8 +90,6 @@ export default function Address() {
     }
   }, [map, marker, position, address, additionalAddress]);
 
-  console.log({ address, longitude: position?.lng, latitude: position?.lat, additionalAddress });
-
   return (
     <>
       <div className="mb-12 mt-4">
@@ -117,6 +115,7 @@ export default function Address() {
               type="text"
               className={`w-full rounded-lg p-3 ${poppins.className} bg-black bg-opacity-[3%] text-sm font-medium text-black/70 focus:outline-none`}
               value={address ?? ''}
+              onChange={(e) => setAddress(e.target.value)}
             />
           </div>
           <div className="mt-4">

@@ -57,10 +57,13 @@ export async function fetchOrderDocument(data: IOrderDocument) {
     });
     const createdRequest = await prisma.requestDocuments.create({
       data: {
-        selectedSchedule: data.selectedSchedule,
+        selectedSchedule: data.selectedSchedule ?? new Date(),
         deliveryOptionsId: data.deliveryOptionsId,
         documentPaymentId: documentPayment.id,
-        address: data.address
+        address: data.address,
+        additionalAddress: data.additionalAddress,
+        longitude: data.longitude?.toString() ?? null,
+        latitude: data.latitude?.toString() ?? null
       }
     });
     const createdDocumentSelected = await prisma.documentSelected.createMany({

@@ -1,6 +1,17 @@
 'use client';
 import React, { useState } from 'react';
-import { Tab, Dialog, DialogBackdrop, DialogPanel, DialogTitle, Button } from '@headlessui/react';
+import {
+  Tab,
+  Dialog,
+  DialogBackdrop,
+  DialogPanel,
+  DialogTitle,
+  Button,
+  TabPanel,
+  TabPanels,
+  TabGroup,
+  TabList
+} from '@headlessui/react';
 import { Poppins } from 'next/font/google';
 import YourOrder from '../order-confirmation/your-order';
 import ShippingOptions from '../order-confirmation/shipping-options';
@@ -12,6 +23,7 @@ import { useRouter } from 'next/navigation';
 import { cleanUpOrder } from '@/store/kiosk/orderSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import { fetchOrderDocument } from '@/server/kiosk';
+import { IOrderDocument } from '@/types';
 
 const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '900'],
@@ -37,14 +49,37 @@ export default function OrderConfirmation(props: { open: boolean; onClose: () =>
   };
 
   const onClickConfirm = async () => {
-    const data = {
+    const data: IOrderDocument = {
       documentSelected: selectedDocuments.orderItem.map((item) => item.id),
-      studentNo: localStorage.getItem('studentNumber'),
+      studentNo: localStorage.getItem('studentNumber') ?? '',
       selectedSchedule: selectedDocuments.schedule,
       deliveryOptionsId: selectedDocuments.shippingOptions,
-      paymentOptionsId: selectedDocuments.paymentMethod
+      paymentOptionsId: selectedDocuments.paymentMethod,
+      address: selectedDocuments.address.googleMapAddress,
+      additionalAddress: selectedDocuments.address.additionalAddress,
+      longitude: selectedDocuments.address.longitude,
+      latitude: selectedDocuments.address.latitude
     };
-    console.log(data);
+    if (
+      !data.deliveryOptionsId ||
+      !data.studentNo ||
+      !data.selectedSchedule ||
+      !data.deliveryOptionsId ||
+      !data.paymentOptionsId ||
+      !data.address ||
+      !data.latitude ||
+      !data.longitude
+    ) {
+      return Swal.fire({
+        icon: 'error',
+        title: 'Missing Information',
+        text: 'Please fill out all required fields.',
+        customClass: {
+          container: `${poppins.className}`,
+          confirmButton: ` bg-red-500 text-white hover:bg-red-600 ${poppins.className} rounded-lg p-3 font-normal`
+        }
+      });
+    }
     // props.onClose();
     // Swal.fire({
     //   title: 'Confirm Payment',
@@ -117,18 +152,11 @@ export default function OrderConfirmation(props: { open: boolean; onClose: () =>
     //     });
     //   }
     // });
-    // const studentNo = localStorage.getItem('studentNumber');
-    // if (studentNo) {
-    //   const response = await fetchOrderDocument({
-    //     documentSelected: ['5b8cd4b8-ee37-4461-9a90-6b344f8b94ff', '10903776-fac2-440f-963a-060151000c22'],
-    //     studentNo,
-    //     selectedSchedule: '2022-10-10T10:00:00.000Z',
-    //     deliveryOptionsId: '2c6c088a-30d2-4146-9459-8cedde9bb4be',
-    //     paymentOptionsId: '60ed65f3-a45c-42ad-80a4-26eca8b546f7',
-    //     address: 'Ipil-Ipil St., Brgy. San Jose, Antipolo City'
-    //   });
-    //   console.log(response);
-    // }
+    const studentNo = localStorage.getItem('studentNumber');
+    if (studentNo) {
+      const response = await fetchOrderDocument(data);
+      console.log(response);
+    }
   };
 
   const tabs = ['Your Order', 'Shipping Options', 'Address', 'Schedule', 'Payment Methods'];
@@ -157,8 +185,8 @@ export default function OrderConfirmation(props: { open: boolean; onClose: () =>
               Confirm Your Order
             </DialogTitle>
 
-            <Tab.Group selectedIndex={selectedIndex}>
-              <Tab.List className="flex space-x-1 rounded-xl p-1">
+            <TabGroup selectedIndex={selectedIndex}>
+              <TabList className="flex space-x-1 rounded-xl p-1">
                 {tabs.map((tab, index) => (
                   <Tab
                     key={index}
@@ -176,29 +204,29 @@ export default function OrderConfirmation(props: { open: boolean; onClose: () =>
                     {tab}
                   </Tab>
                 ))}
-              </Tab.List>
-              <Tab.Panels className="mt-2">
-                <Tab.Panel className="rounded-xl bg-white p-3">
+              </TabList>
+              <TabPanels className="mt-2">
+                <TabPanel className="rounded-xl bg-white p-3">
                   <YourOrder />
-                </Tab.Panel>
+                </TabPanel>
 
-                <Tab.Panel className="rounded-xl bg-white p-3">
+                <TabPanel className="rounded-xl bg-white p-3">
                   <ShippingOptions />
-                </Tab.Panel>
+                </TabPanel>
 
-                <Tab.Panel className="rounded-xl bg-white p-3">
+                <TabPanel className="rounded-xl bg-white p-3">
                   <Address />
-                </Tab.Panel>
+                </TabPanel>
 
-                <Tab.Panel className="rounded-xl bg-white p-3">
+                <TabPanel className="rounded-xl bg-white p-3">
                   <Schedule />
-                </Tab.Panel>
+                </TabPanel>
 
-                <Tab.Panel className="rounded-xl bg-white p-3">
+                <TabPanel className="rounded-xl bg-white p-3">
                   <PaymentMethod />
-                </Tab.Panel>
-              </Tab.Panels>
-            </Tab.Group>
+                </TabPanel>
+              </TabPanels>
+            </TabGroup>
 
             <div className="mt-4 flex justify-end gap-2">
               <Button

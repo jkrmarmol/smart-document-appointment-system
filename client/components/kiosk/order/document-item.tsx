@@ -21,12 +21,9 @@ export default function DocumentItem(item: DocumentItemProps) {
         className="relative rounded-2xl bg-blue-500"
         onClick={() => dispatch(removeFromOrder(item.id))}
       >
-        <button
-          className="absolute -right-2 -top-2 rounded-full bg-red-500 text-white hover:text-white"
-          onClick={() => dispatch(removeFromOrder(item.id))}
-        >
+        <div className="absolute -right-2 -top-2 rounded-full bg-red-500 text-white hover:text-white">
           <X className="rounded-full p-1 hover:bg-red-500" size={30} />
-        </button>
+        </div>
         <div className="flex h-full flex-col items-center justify-between p-4 py-10">
           <div className="text-center">
             <h3 className={`font-semibold text-white ${poppins.className} text-lg font-semibold`}>{item.name}</h3>
