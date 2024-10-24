@@ -1,6 +1,6 @@
 'use client';
 import { Poppins } from 'next/font/google';
-import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { useState, useCallback, useEffect } from 'react';
 import { useAppDispatch } from '@/hooks/redux';
 import { setOrderDataAddress } from '@/store/kiosk/orderSlice';
@@ -28,16 +28,20 @@ export default function Address() {
   const dispatch = useAppDispatch();
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [marker, setMarker] = useState<google.maps.Marker | null>(null);
-  const [address, setAddress] = useState<string | null>(null);
-  const [position, setPosition] = useState<{ lat: number; lng: number } | null>(null);
+  const [address, setAddress] = useState<string | null>(
+    'ICCT Colleges Foundation Incorporated, VV Soliven Avenue, Cainta, J493+434, Cainta, 1900 Rizal, Philippines'
+  );
+  const [position, setPosition] = useState<{ lat: number; lng: number } | null>(center);
   const [additionalAddress, setAdditionalAddress] = useState<string | null>(null);
 
-  const onLoad = useCallback(function callback(map: google.maps.Map) {
-    const bounds = new window.google.maps.LatLngBounds(center);
-    map.fitBounds(bounds);
-
-    setMap(map);
-  }, []);
+  const onLoad = useCallback(
+    function callback(map: google.maps.Map) {
+      const bounds = new window.google.maps.LatLngBounds(center);
+      map.fitBounds(bounds);
+      setMap(map);
+    },
+    [isLoaded]
+  );
 
   const onUnmount = useCallback(function callback(map: google.maps.Map) {
     setMap(null);
@@ -52,6 +56,7 @@ export default function Address() {
       setPosition(position);
 
       if (marker) {
+        console.log('test');
         marker.setPosition(position);
       } else {
         const newMarker = new google.maps.Marker({
@@ -90,6 +95,13 @@ export default function Address() {
     }
   }, [map, marker, position, address, additionalAddress]);
 
+  console.log({
+    googleMapAddress: address || null,
+    longitude: position?.lng || null,
+    latitude: position?.lat || null,
+    additionalAddress: additionalAddress || null
+  });
+
   return (
     <>
       <div className="mb-12 mt-4">
@@ -105,7 +117,17 @@ export default function Address() {
             onLoad={onLoad}
             onUnmount={onUnmount}
             onClick={handleMapClick}
-          />
+          >
+            {position && (
+              <Marker
+                position={position}
+                icon={{
+                  url: '/images/pin-icon.png',
+                  scaledSize: new google.maps.Size(30.21, 46.56)
+                }}
+              />
+            )}
+          </GoogleMap>
         )}
 
         <div>
